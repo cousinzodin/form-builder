@@ -1,7 +1,6 @@
 import React from 'react';
-import withLink from '../hoc/withLink';
+import {Link as RouterLink} from "react-router-dom";
 import FormList from '../shared/FormList';
-import AppFooter from '../layout/AppFooter';
 import Layout from '../layout/Layout';
 import {Fab} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -21,11 +20,10 @@ const forms = [
 ];
 
 export default function FormListPage() {
-  const LinkToConstructor = withLink("./constructor")(Fab);
 
   return (
-    <Layout action={<LinkToConstructor href="" color="secondary" aria-label="add">
-      <AddIcon /></LinkToConstructor>}>
+    <Layout action={<Fab to="/constructor" component={RouterLink} color="secondary" aria-label="add">
+      <AddIcon /></Fab>}>
       <FormList forms={forms} />
     </Layout>
   );

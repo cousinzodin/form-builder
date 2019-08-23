@@ -1,5 +1,6 @@
 import React from 'react';
-import {AppBar, Toolbar} from '@material-ui/core';
+
+import {AppBar, Toolbar, Link} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
 
@@ -8,6 +9,11 @@ const useStyles = makeStyles(() => ({
     top: 'auto',
     textAlign: 'center',
     bottom: 0,
+  },
+  toolBar: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingTop: "20px",
   },
   fabButton: {
     position: 'absolute',
@@ -24,11 +30,13 @@ export default function AppFooter(props) {
 
   return (
     <AppBar position="fixed" color="default" className={classes.appBar}>
-      <Toolbar>
+      <Toolbar className={classes.toolBar}>
         <div className={classes.fabButton}>
           {props.children}
         </div>
+        <Link href="https://github.com/cousinzodin/form-builder" color="textSecondary">View on GitHub</Link>
       </Toolbar>
+
     </AppBar>
   );
 }

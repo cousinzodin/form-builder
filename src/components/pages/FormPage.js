@@ -2,7 +2,6 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {Paper, Fab} from '@material-ui/core/';
 import Layout from '../layout/Layout';
-import AppFooter from '../layout/AppFooter';
 import FormItem from '../shared/FormItem';
 
 const useStyles = makeStyles(theme => ({
