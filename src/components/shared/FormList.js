@@ -22,11 +22,11 @@ export default function FormList(props) {
     <div className={classes.root}>
       <Grid container spacing={3}>
         {listItems}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Button variant="outlined" size="small" color="primary">
             Load More
         </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
 
     </div>

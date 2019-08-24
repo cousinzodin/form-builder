@@ -14,9 +14,7 @@ export default function FormItem(props) {
         <FormInput label={label} id={name} placeholder={placeholder} type={type} />
       )
     case 'dropdown':
-      return (
-        <FormSelect label={label} id={name} options={options} defaultOption={options[defaultOption].value} />
-      )
+      return (options && options.length) ? <FormSelect label={label} id={name} options={options} defaultOption={options[defaultOption].value} /> : null;
     case 'checkmark':
       return (
         <FormCheckbox label={label} name={name} />

@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 export default function FlatTable(props) {
   const classes = useStyles();
   const {rows} = props;
-  const columns = Object.keys(rows[1]);
+  const columns = Object.keys(rows[0]);
 
   return (
     <Table className={classes.table}>

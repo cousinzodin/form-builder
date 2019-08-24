@@ -1,57 +1,56 @@
 import React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import {Typography, Paper} from '@material-ui/core/';
+import axios from 'axios';
+import {ENDPOINT} from '../../config';
+import styled from '../hoc/styled';
+import {Typography, Paper, CircularProgress } from '@material-ui/core/';
 import Layout from '../layout/Layout';
 import Table from '../shared/FlatTable';
 
-const fills = [
-  {
-    id: 89189,
-    fields: {
-      username: 'John',
-      year: 1994,
-      gender: 'm',
-      news: true,
-    }
-  },
-  {
-    id: 72384724,
-    fields: {
-      username: 'Jane',
-      year: 1995,
-      gender: 'w',
-      news: false,
-    }
-  },
-];
-
-const useStyles = makeStyles(theme => ({
-  paper: {
-    marginTop: theme.spacing(2),
-  },
-  title: {
-    padding: theme.spacing(2),
-  },
-  table: {
-    minWidth: 650,
-  },
+const StyledPaper = styled(Paper)(theme => ({
+  marginTop: theme.spacing(2),
+  paddingBottom:theme.spacing(2),
 }));
 
-export default function FormStatsPage() {
-  const classes = useStyles();
-  const data = fills.map((item) => {
-    const id = item.id;
-    return {id, ...item.fields}
-  });
-  return (
-    <Layout>
-      <Paper className={classes.paper}>
-        <Typography className={classes.title} variant="h6" align="left">
-          Title
-    </Typography>
-        <Table className={classes.table} rows={data} />
-      </Paper>
-    </Layout>
-  );
+const Title = styled(Typography)(theme => ({
+  padding: theme.spacing(2),
+}));
+
+export default class FormStatsPage extends React.Component {
+
+  state = {fills: null};
+
+  componentDidMount() {
+    const id = this.props.match.params.id;
+    axios.get(ENDPOINT + "fills/" + id)
+      .then(response => {
+        this.setState({fills: response.data});
+      });
+  }
+
+  render() {
+    let content = <CircularProgress />;
+    if (this.state.fills) {
+      if (this.state.fills.length) {
+        const data = this.state.fills.map((item) => {
+          const id = item.id;
+          return {id, ...item.fields}
+        });
+        content = <Table rows={data} />;
+      } else {
+        content = <Typography>This form had not been filled yet</Typography >
+      }
+    }
+    return (
+      <Layout>
+        <StyledPaper>
+          <Title variant="h6" align="left">
+            Title
+          </Title>
+          {content}
+        </StyledPaper>
+      </Layout>
+    );
+  }
+
 }
 

@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1),
     color: theme.palette.text.secondary,
     border: '1px solid',
-    borderColor:  theme.palette.text.secondary,
+    borderColor: theme.palette.text.secondary,
     textAlign: 'left',
   },
   centered: {
@@ -36,18 +36,17 @@ export default function FormConstructorItem(props) {
       {type === 'dropdown' ?
         <React.Fragment>
           <Typography className={classes.centered}>Add or edit options for your dropdown</Typography>
-          {options.map((option, index) => {
+          {(options && options.length) ? options.map((option, index) => {
             const i = index + 1;
             return (<Paper key={option.value} elevation={0} className={classes.paper}><FormInput label={"Option " + i + " name"} id={"option-name-field-" + i} placeholder="Option name" type="text" value={option.name} />
-          <FormInput label={"Option " + i + " value"} id={"option-value-field-" + i} placeholder="option-value" type="text" value={option.value} /></Paper>)
-      }
-      )}
-      <div className={classes.centered}>
-      <Button size="small" variant="contained" color="primary">+ Add option</Button></div>
-      <FormSelect label="Select default option" id={"default-option-field"} options={options} defaultOption={options[defaultOption].value} />
+              <FormInput label={"Option " + i + " value"} id={"option-value-field-" + i} placeholder="option-value" type="text" value={option.value} /></Paper>)
+          }) : null}
+          <div className={classes.centered}>
+            <Button size="small" variant="contained" color="primary">+ Add option</Button></div>
+          {(options && options.length) ? <FormSelect label="Select default option" id={"default-option-field"} options={options} defaultOption={options[defaultOption].value} /> : null}
         </React.Fragment>
         : null
-}
+      }
     </div >
   )
 }

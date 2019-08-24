@@ -15,9 +15,9 @@ function App() {
 
         <Switch>
           <Route path="/" exact component={FormListPage} />
-          <Route path="/form/stats" component={FormStatsPage} />
-          <Route path="/form/" component={FormPage} />
-          <Route path="/constructor/" component={FormConstructorPage} />
+          <Route path="/form/stats/:id" component={FormStatsPage} />
+          <Route path="/form/:id" component={FormPage} />
+          <Route path="/constructor/:id" component={FormConstructorPage} />
           <Route component={Error404Page} />
         </Switch>
 
