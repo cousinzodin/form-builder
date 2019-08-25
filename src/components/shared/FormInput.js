@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Input, FormControl, InputLabel} from '@material-ui/core/';
 
 
@@ -12,3 +13,12 @@ export default function FormInput(props) {
     </FormControl>
   )
 }
+
+FormInput.propTypes = {
+  type: PropTypes.string,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  id: PropTypes.string,
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+};

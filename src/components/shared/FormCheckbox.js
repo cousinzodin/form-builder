@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {FormControl, Checkbox, FormControlLabel} from '@material-ui/core/';
 
 export default function FormCheckbox(props) {
@@ -18,3 +19,8 @@ export default function FormCheckbox(props) {
       /></FormControl>
   );
 }
+
+FormCheckbox.propTypes = {
+  name: PropTypes.string,
+  label: PropTypes.string,
+};

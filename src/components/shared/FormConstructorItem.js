@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
@@ -50,3 +51,16 @@ export default function FormConstructorItem(props) {
     </div >
   )
 }
+
+FormConstructorItem.propTypes = {
+  id: PropTypes.string,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  name: PropTypes.string,
+  placeholder: PropTypes.string,
+  defaultOption: PropTypes.string,
+  options: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string
+  }))
+};

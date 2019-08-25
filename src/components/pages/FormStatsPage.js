@@ -41,7 +41,7 @@ export default class FormStatsPage extends React.Component {
       }
     }
     return (
-      <Layout>
+      <Layout withLink>
         <StyledPaper>
           <Title variant="h6" align="left">
             Title
@@ -51,6 +51,5 @@ export default class FormStatsPage extends React.Component {
       </Layout>
     );
   }
-
 }
 

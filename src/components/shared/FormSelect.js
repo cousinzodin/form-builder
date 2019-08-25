@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {FormControl, InputLabel, Select, MenuItem} from '@material-ui/core/';
 
 export default function FormSelect(props) {
@@ -19,3 +20,13 @@ export default function FormSelect(props) {
     </FormControl>
   )
 }
+
+FormSelect.propTypes = {
+  id: PropTypes.string,
+  label: PropTypes.string,
+  defaultOption: PropTypes.string,
+  options: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string
+  }))
+};

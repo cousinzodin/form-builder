@@ -24,7 +24,7 @@ export default class FormListPage extends React.Component {
       content = this.state.forms.length ? <FormList forms={this.state.forms} /> : <Typography >You have no forms yet</Typography >
     }
     return (
-      <Layout action={<Fab to="/constructor" component={RouterLink} color="secondary" aria-label="add">
+      <Layout withLink action={<Fab to="/constructor" component={RouterLink} color="secondary" aria-label="add">
         <AddIcon /></Fab>}>
         {content}
       </Layout>

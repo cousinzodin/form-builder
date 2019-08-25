@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Link as RouterLink} from "react-router-dom";
 import {makeStyles} from '@material-ui/core/styles';
 import {Grid, Paper, Button, Typography, Divider} from '@material-ui/core';
@@ -45,3 +46,8 @@ export default function FormListItem(props) {
     </Grid>
   );
 }
+
+FormListItem.propTypes = {
+  name: PropTypes.string,
+  id: PropTypes.number,
+};

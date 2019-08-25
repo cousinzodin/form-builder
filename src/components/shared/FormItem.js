@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FormInput from "./FormInput";
 import FormCheckbox from "./FormCheckbox";
 import FormSelect from "./FormSelect";
@@ -24,3 +25,16 @@ export default function FormItem(props) {
   }
 
 }
+
+FormItem.propTypes = {
+  id: PropTypes.string,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  name: PropTypes.string,
+  placeholder: PropTypes.string,
+  defaultOption: PropTypes.number,
+  options: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string
+  }))
+};

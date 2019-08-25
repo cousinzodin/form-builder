@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {ENDPOINT} from '../../config';
-import {Paper, Fab, Button, CircularProgress } from '@material-ui/core/';
+import {Paper, Fab, Button, CircularProgress} from '@material-ui/core/';
 import styled from '../hoc/styled';
 import Layout from '../layout/Layout';
 //import FormItem from '../shared/FormItem';
@@ -24,10 +24,14 @@ export default class FormConstructorPage extends React.Component {
 
   componentDidMount() {
     const id = this.props.match.params.id;
-    axios.get(ENDPOINT + "forms/" + id)
-      .then(response => {
-        this.setState({form: response.data});
-      });
+    if (id) {
+      axios.get(ENDPOINT + "forms/" + id)
+        .then(response => {
+          this.setState({form: response.data});
+        });
+    } else {
+      this.setState({form: {name: "My new form", fields: []}});
+    }
   }
 
   render() {
@@ -52,15 +56,10 @@ export default class FormConstructorPage extends React.Component {
         </React.Fragment>;
     }
     return (
-      <Layout action={<Fab variant="extended" color="secondary" disabled={!this.state.form}> Save Form </Fab>}>
-
+      <Layout withLink action={<Fab variant="extended" color="secondary" disabled={!this.state.form}> Save Form </Fab>}>
         {content}
-
-
       </Layout>
     );
   }
-
-
 }
 
