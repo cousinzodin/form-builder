@@ -15,13 +15,44 @@ const StyledPaper = styled(Paper)(theme => ({
 
 
 export default class FormPage extends React.Component {
-  state = {form: null};
+  state = {form: null, filling: null};
 
   componentDidMount() {
     const id = this.props.match.params.id;
     axios.get(ENDPOINT + "forms/" + id)
       .then(response => {
+        const filling = {};
+        response.data.fields.forEach(field => {
+          filling[field.name] = field.type === "dropdown" && field.items && field.items.length ? field.items[field.default].value : field.type === "checkmark" ? false : "";
+        });
+        this.setState({filling: filling});
         this.setState({form: response.data});
+      });
+  }
+
+  handleChange = (e) => {
+    const filling = {...this.state.filling};
+    switch (e.target.type) {
+      case 'number':
+        filling[e.target.name] = parseInt(e.target.value);
+        break;
+      case 'checkbox':
+        filling[e.target.value] = e.target.checked;
+        break;
+      default:
+        filling[e.target.name] = e.target.value;
+    }
+
+    this.setState({filling: filling});
+  }
+
+  send = (e) => {
+    e.preventDefault();
+    const id = this.props.match.params.id;
+    const data = {fields: this.state.filling};
+    axios.post(ENDPOINT + "fills/" + id, data)
+      .then(response => {
+        console.log(response);
       });
   }
 
@@ -31,6 +62,8 @@ export default class FormPage extends React.Component {
       content = <StyledPaper>
         <Typography variant="h6">{this.state.form.name}</Typography>
         {this.state.form.fields.map(field => (<FormItem
+          value={this.state.filling[field.name]}
+          onChange={this.handleChange}
           key={field.name}
           type={field.type}
           name={field.name}
@@ -38,10 +71,12 @@ export default class FormPage extends React.Component {
           placeholder={field.placeholder}
           options={field.items}
           defaultOption={field.default} />))}
+
       </StyledPaper>
     }
     return (
-      <Layout action={<Fab variant="extended" color="secondary" disabled={!this.state.form}>Send form</Fab>}>
+      <Layout component="form" onSubmit={this.send}
+        action={<Fab variant="extended" color="secondary" type="submit" disabled={!this.state.form}>Send form</Fab>}>
         {content}
       </Layout>
     );

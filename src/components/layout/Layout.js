@@ -17,15 +17,17 @@ export default function Layout(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <AppHeader withLink={props.withLink}/>
-      <Container className={classes.root}>
+      <AppHeader withLink={props.withLink} />
+      <Container component={props.component} onSubmit={props.onSubmit} className={classes.root}>
         <Box my={2}>
           {props.children}
         </Box>
+
+        <AppFooter>
+          {props.action}
+        </AppFooter>
       </Container>
-      <AppFooter>
-        {props.action}
-      </AppFooter>
+
     </React.Fragment>
   );
 };

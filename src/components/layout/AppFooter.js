@@ -29,7 +29,7 @@ export default function AppFooter(props) {
   const classes = useStyles();
 
   return (
-    <AppBar position="fixed" color="default" className={classes.appBar}>
+    <AppBar component="footer" position="fixed" color="default" className={classes.appBar}>
       <Toolbar className={classes.toolBar}>
         <div className={classes.fabButton}>
           {props.children}

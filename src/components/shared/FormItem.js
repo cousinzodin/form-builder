@@ -6,19 +6,19 @@ import FormSelect from "./FormSelect";
 
 
 export default function FormItem(props) {
-  const {type, name, label, placeholder, options, defaultOption} = props;
+  const {type, name, label, placeholder, options, defaultOption, onChange, value} = props;
 
   switch (type) {
     case 'text':
     case 'number':
       return (
-        <FormInput label={label} id={name} placeholder={placeholder} type={type} />
+        <FormInput onChange={onChange} label={label} id={name} placeholder={placeholder} type={type} value={value} />
       )
     case 'dropdown':
-      return (options && options.length) ? <FormSelect label={label} id={name} options={options} defaultOption={options[defaultOption].value} /> : null;
+      return (options && options.length) ? <FormSelect onChange={onChange} label={label} id={name} options={options} value={value} defaultOption={options[defaultOption].value} /> : null;
     case 'checkmark':
       return (
-        <FormCheckbox label={label} name={name} />
+        <FormCheckbox onChange={onChange} label={label} name={name} value={name} checked={value} />
       );
     default:
       return null;
@@ -31,6 +31,12 @@ FormItem.propTypes = {
   label: PropTypes.string,
   type: PropTypes.string,
   name: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.bool
+  ]),
+  checked: PropTypes.string,
   placeholder: PropTypes.string,
   defaultOption: PropTypes.number,
   options: PropTypes.arrayOf(PropTypes.shape({
