@@ -12,10 +12,10 @@ export default function FormItem(props) {
     case 'text':
     case 'number':
       return (
-        <FormInput onChange={onChange} label={label} id={name} placeholder={placeholder} type={type} value={value} />
+        <FormInput onChange={onChange} label={label} id={name + "-field"} name={name} placeholder={placeholder} type={type} value={value} />
       )
     case 'dropdown':
-      return (options && options.length) ? <FormSelect onChange={onChange} label={label} id={name} options={options} value={value} defaultOption={options[defaultOption].value} /> : null;
+      return (options && options.length) ? <FormSelect onChange={onChange} label={label} id={name} options={options} value={value} defaultOption={defaultOption} /> : null;
     case 'checkmark':
       return (
         <FormCheckbox onChange={onChange} label={label} name={name} value={name} checked={value} />
@@ -42,5 +42,6 @@ FormItem.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     value: PropTypes.string
-  }))
+  })),
+  onChange: PropTypes.func
 };

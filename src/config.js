@@ -1,1 +1,1 @@
-export const ENDPOINT = 'http://forms-app.brutgroot.com/shpax/';
+export const ENDPOINT = 'http://forms-app.brutgroot.com/cousinzodin/';

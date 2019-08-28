@@ -1,55 +1,150 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/core/styles';
+import styled from '../hoc/styled';
 import FormInput from "./FormInput";
+import ButtonDelete from "./ButtonDelete";
 import FormSelect from "./FormSelect";
+import {formatToSnakeCase} from "../../utils";
 import {Button, Paper, Typography} from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    paddingTop: 0,
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    color: theme.palette.text.secondary,
-    border: '1px solid',
-    borderColor: theme.palette.text.secondary,
-    textAlign: 'left',
-  },
-  centered: {
-    textAlign: 'center',
-    paddingTop: theme.spacing(2),
-  }
+const StyledPaper = styled(Paper)(theme => ({
+  padding: theme.spacing(2),
+  paddingTop: 0,
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(1),
+  color: theme.palette.text.secondary,
+  border: '1px solid',
+  borderColor: theme.palette.text.secondary,
+  textAlign: 'left',
+  position: 'relative'
+}));
+
+const CenteredText = styled(Typography)(theme => ({
+  textAlign: 'center',
+  paddingTop: theme.spacing(2),
 }));
 
 
-export default function FormConstructorItem(props) {
-  const classes = useStyles();
-  const {type, name, label, placeholder, options, defaultOption} = props;
-  const types = [{name: 'Text', value: 'text'}, {name: 'Number', value: 'number'}, {name: 'Dropdown', value: 'dropdown'}, {name: 'Checkmark', value: 'checkmark'}];
+export default class FormConstructorItem extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      type: props.type,
+      name: props.name,
+      placeholder: props.placeholder || "",
+      label: props.label,
+      items: props.items || [],
+      defaultOption: props.defaultOption || 0,
+      defaults: [],
+    }
+  }
 
-  return (
-    <div>
-      <FormSelect label="Field type" id={"type-field"} options={types} defaultOption={type || types[0]} />
-      <FormInput label="Label" id={"label-field"} placeholder="My field" type="text" value={label} />
-      <FormInput label="Name" id={"name-field"} placeholder="my-field" type="text" value={name} />
-      {type === 'text' || type === 'number' ? <FormInput label="Placeholder" id={"placeholder-field"} placeholder="My helper text" type="text" value={placeholder} /> : null}
-      {type === 'dropdown' ?
-        <React.Fragment>
-          <Typography className={classes.centered}>Add or edit options for your dropdown</Typography>
-          {(options && options.length) ? options.map((option, index) => {
-            const i = index + 1;
-            return (<Paper key={option.value} elevation={0} className={classes.paper}><FormInput label={"Option " + i + " name"} id={"option-name-field-" + i} placeholder="Option name" type="text" value={option.name} />
-              <FormInput label={"Option " + i + " value"} id={"option-value-field-" + i} placeholder="option-value" type="text" value={option.value} /></Paper>)
-          }) : null}
-          <div className={classes.centered}>
-            <Button size="small" variant="contained" color="primary">+ Add option</Button></div>
-          {(options && options.length) ? <FormSelect label="Select default option" id={"default-option-field"} options={options} defaultOption={options[defaultOption].value} /> : null}
-        </React.Fragment>
-        : null
-      }
-    </div >
-  )
+  types = [{name: 'Text', value: 'text'}, {name: 'Number', value: 'number'}, {name: 'Dropdown', value: 'dropdown'}, {name: 'Checkmark', value: 'checkmark'}];
+
+  componentDidMount() {
+    this.updateDefaults();
+  }
+
+  updateDefaults = () => {
+    const updated = this.state.items.map((o, i) => ({
+      name: o.name,
+      value: i,
+    }));
+    this.setState({defaults: updated});
+  }
+
+  onChange = (e) => {
+    const {name, value} = e.target;
+    const updatedState = {};
+    updatedState[name] = name === "name" ? formatToSnakeCase(value) : value;
+    this.setState(updatedState);
+  }
+
+  onOptionChange = (e, index) => {
+    const {name, value} = e.target;
+    const updatedOptions = [...this.state.items];
+    updatedOptions[index][name] = name === "value" ? formatToSnakeCase(value) : value;
+    this.setState({items: updatedOptions});
+    this.updateDefaults();
+  }
+
+  onDefaultChange = (e) => {
+    const updatedState = {...this.state, defaultOption: e.target.value};
+    this.setState(updatedState);
+    this.save(updatedState);
+  }
+
+  onTypeChange = (e) => {
+    const {value} = e.target;
+    const updatedState = {...this.state, type: value};
+    if (value === "dropdown") {
+      updatedState.items = updatedState.items ? updatedState.items : [];
+    } else {
+      updatedState.items = undefined;
+    }
+    this.setState(updatedState);
+    this.save(updatedState);
+  }
+
+  addOption = () => {
+    this.setState({items: [...this.state.items, {name: "", value: ""}]});
+  }
+
+  deleteOption = value => {
+    const updatedOptions = this.state.items.filter(item => item.value !== value);
+    this.setState({items: updatedOptions});
+  }
+
+
+  save = (state) => {
+    const {type, name, label, placeholder, items, defaultOption} = state;
+    switch (type) {
+      case 'dropdown':
+        this.props.onFieldChange({type, name, label, items, default: defaultOption});
+        break;
+      case 'checkmark':
+        this.props.onFieldChange({type, name, label});
+        break;
+      default:
+        this.props.onFieldChange({type, name, label, placeholder});
+    }
+  }
+
+  onBlur = () => {
+    this.save(this.state);
+  }
+
+  render() {
+    const {type, name, label, placeholder, items, defaultOption} = this.state;
+    return (
+      <div>
+        <FormSelect onChange={this.onTypeChange} label="Field type" name={"type"} options={this.types} value={type} defaultOption={defaultOption} />
+        <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Label" name={"label"} placeholder="My field" type="text" value={label} />
+        <FormInput onBlur={this.onBlur} onChange={this.onChange} label="Name" name={"name"} placeholder="my-field" type="text" value={name} />
+        {type === 'text' || type === 'number' ? <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Placeholder" name={"placeholder"} placeholder="My helper text" type="text" value={placeholder} /> : null}
+        {type === 'dropdown' ?
+          <React.Fragment>
+            <CenteredText>Add or edit options for your dropdown</CenteredText>
+            {(items && items.length) ? items.map((option, index) => {
+              const i = index + 1;
+              return (<StyledPaper key={index} elevation={0}>
+                <ButtonDelete onClick={() => this.deleteOption(option.value)}/>
+                <FormInput onChange={(e) => this.onOptionChange(e, index)} onBlur={this.onBlur} label={"Option " + i + " name"} name="name" id={"option-name-field-" + i} placeholder="Option name" type="text" value={option.name} />
+                <FormInput onChange={(e) => this.onOptionChange(e, index)} onBlur={this.onBlur} label={"Option " + i + " value"} name="value" id={"option-value-field-" + i} placeholder="option-value" type="text" value={option.value} />
+              </StyledPaper>)
+            }) : null}
+            <CenteredText>
+              <Button onClick={this.addOption} size="small" variant="contained" color="primary">+ Add option</Button>
+            </CenteredText>
+            {(items && items.length > 1) ? <FormSelect onChange={this.onDefaultChange} label="Select default option" value={defaultOption.toString()} id={"default"} options={this.state.defaults} defaultOption={0} /> : null}
+          </React.Fragment>
+          : null
+        }
+      </div >
+
+
+    )
+  }
 }
 
 FormConstructorItem.propTypes = {
@@ -59,8 +154,9 @@ FormConstructorItem.propTypes = {
   name: PropTypes.string,
   placeholder: PropTypes.string,
   defaultOption: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.shape({
+  items: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     value: PropTypes.string
-  }))
+  })),
+  onFieldChange: PropTypes.func
 };

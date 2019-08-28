@@ -10,7 +10,7 @@ export default function FormSelect(props) {
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
       onChange={onChange}
-        value={value || defaultOption}
+        value={value || options[defaultOption].value}
         inputProps={{
           name: id,
           id: id,
@@ -26,10 +26,13 @@ FormSelect.propTypes = {
   id: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.string,
-  defaultOption: PropTypes.string,
+  defaultOption: PropTypes.number,
   options: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
-    value: PropTypes.string
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
   })),
   onChange: PropTypes.func
 };

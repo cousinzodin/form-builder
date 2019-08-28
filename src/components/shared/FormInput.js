@@ -4,12 +4,12 @@ import {Input, FormControl, InputLabel} from '@material-ui/core/';
 
 
 export default function FormInput(props) {
-  const {type, id, label, placeholder, value, onChange} = props;
+  const {type, id, name, label, placeholder, value, onChange, onBlur} = props;
 
   return (
     <FormControl fullWidth margin="normal">
       <InputLabel htmlFor={id}>{label}</InputLabel>
-      <Input onChange={onChange} id={id} name={id} aria-describedby={placeholder} placeholder={placeholder} type={type} value={value}/>
+      <Input onChange={onChange} onBlur={onBlur} id={id} name={name} aria-describedby={placeholder} placeholder={placeholder} type={type} value={value}/>
     </FormControl>
   )
 }
@@ -24,5 +24,6 @@ FormInput.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func
 };
