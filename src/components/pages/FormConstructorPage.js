@@ -1,8 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import axios from '../../axios';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
-import {ENDPOINT} from '../../config';
 import {Paper, Fab, Button, CircularProgress} from '@material-ui/core/';
 import styled from '../hoc/styled';
 import Layout from '../layout/Layout';
@@ -10,8 +9,7 @@ import Layout from '../layout/Layout';
 import FormConstructorItem from '../shared/FormConstructorItem';
 import FormInput from '../shared/FormInput';
 import ButtonDelete from "../shared/ButtonDelete";
-
-
+import withErrorHandler from "../hoc/withErrorHandler";
 
 const StyledPaper = styled(Paper)(theme => ({
   padding: theme.spacing(2),
@@ -29,19 +27,21 @@ class FormConstructorPage extends React.Component {
 
   componentDidMount() {
     if (this.id) {
-      axios.get(ENDPOINT + "fills/" + this.id)
+      axios.get("fills/" + this.id)
         .then(response => {
           if (response.data.length > 0) {
             this.props.showModal({title: "You can't edit this form", message: "This form has already been filled"});
             this.props.history.replace("/form/" + this.id);
             return;
           } else {
-            axios.get(ENDPOINT + "forms/" + this.id)
+            axios.get("forms/" + this.id)
               .then(response => {
                 this.setState({name: response.data.name, fields: response.data.fields});
-              });
+              })
+              .catch(error => {});
           }
-        });
+        })
+        .catch(error => {});
     }
   }
 
@@ -54,20 +54,25 @@ class FormConstructorPage extends React.Component {
     const id = this.props.match.params.id;
     console.log("save", this.state, id);
     if (id) {
-      axios.put(ENDPOINT + "forms/" + id, this.state)
+      axios.put("forms/" + id, this.state)
         .then(response => {
           console.log(response);
-          this.props.showModal({title: "Form has been saved"});
-          this.props.history.push("/");
-        });
+          if (response) {
+            this.props.showModal({title: "Form has been saved"});
+            this.props.history.push("/");
+          }
+        })
+        .catch(error => {});
     } else {
-      axios.post(ENDPOINT + "forms/new", this.state)
+      axios.post("forms/new", this.state)
         .then(response => {
           console.log(response);
-          this.props.showModal({title: "Form has been saved"});
-          this.props.clearDraft();
-          this.props.history.push("/");
-        });
+          if (response.data.id) {
+            this.props.showModal({title: "Form has been saved"});
+            this.props.clearDraft();
+            this.props.history.push("/")
+          }
+        }).catch(error => {});
     }
   }
 
@@ -100,7 +105,7 @@ class FormConstructorPage extends React.Component {
   }
 
   render() {
-    let content = <CircularProgress />;
+    let content = this.props.error ? null : <CircularProgress />;
     if (this.state && this.state.fields) {
       content =
         <React.Fragment>
@@ -147,4 +152,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormConstructorPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormConstructorPage, axios));

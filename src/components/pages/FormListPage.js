@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+import axios from '../../axios';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
-import {ENDPOINT} from '../../config';
 import {Link as RouterLink} from "react-router-dom";
+import withErrorHandler from "../hoc/withErrorHandler";
 import FormList from '../shared/FormList';
 import Layout from '../layout/Layout';
 import {Fab, CircularProgress, Typography} from '@material-ui/core';
@@ -13,15 +13,16 @@ class FormListPage extends React.Component {
 
   componentDidMount() {
     if (!this.props.forms) {
-      axios.get(ENDPOINT + "forms/list")
+      axios.get("forms/list")
         .then(response => {
           this.props.onFormsLoaded(response.data);
-        });
+        })
+        .catch(error => {});
     }
   }
 
   render() {
-    let content = <CircularProgress />;
+    let content = this.props.error ? null : <CircularProgress />;
     if (this.props.forms) {
       content = this.props.forms.length ? <FormList forms={this.props.forms} /> : <Typography >You have no forms yet</Typography >
     }
@@ -47,4 +48,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormListPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormListPage, axios));

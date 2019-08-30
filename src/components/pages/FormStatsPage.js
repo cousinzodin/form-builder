@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios from '../../axios';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
 import {ENDPOINT, ITEMS_PER_TAKE} from '../../config';
@@ -7,6 +7,8 @@ import styled from '../hoc/styled';
 import {Typography, Paper, CircularProgress, Grid, Button} from '@material-ui/core/';
 import Layout from '../layout/Layout';
 import Table from '../shared/FlatTable';
+import withErrorHandler from "../hoc/withErrorHandler";
+
 
 const StyledPaper = styled(Paper)(theme => ({
   marginTop: theme.spacing(2),
@@ -26,11 +28,12 @@ class FormStatsPage extends React.Component {
     const id = this.props.match.params.id;
     const take = this.state.take;
     const max = ITEMS_PER_TAKE;
-    axios.get(`${ENDPOINT}fills/${id}?offset=${max * take}&count=${max}`)
+    axios.get(`fills/${id}?offset=${max * take}&count=${max}`)
       .then(response => {
         this.props.saveFills(response.data);
         this.setState({take: this.state.take + 1, isAllLoaded: response.data.length < max});
-      });
+      })
+      .catch(error => {});
 
   }
 
@@ -43,7 +46,8 @@ class FormStatsPage extends React.Component {
       axios.get(ENDPOINT + "forms/" + id)
         .then(response => {
           this.props.saveForm(response.data);
-        });
+        })
+        .catch(error => {});
     }
   }
 
@@ -55,7 +59,7 @@ class FormStatsPage extends React.Component {
 
   render() {
     const name = this.getName();
-    let content = <CircularProgress />;
+    let content = this.props.error ? null : <CircularProgress />;
     if (this.props.fills) {
       if (this.props.fills.length) {
         const data = this.props.fills.map((item) => {
@@ -75,11 +79,11 @@ class FormStatsPage extends React.Component {
           </Title>
           {content}
         </StyledPaper>
-        {this.state.isAllLoaded ? null : <Grid item xs={12}>
+        {this.props.fills && !this.state.isAllLoaded ? <Grid item xs={12}>
           <Button onClick={this.loadData} variant="outlined" size="small" color="primary">
             Load More
         </Button>
-        </Grid>}
+        </Grid> : null}
       </Layout>
     );
   }
@@ -100,4 +104,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormStatsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormStatsPage, axios));

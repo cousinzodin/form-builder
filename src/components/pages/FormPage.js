@@ -1,12 +1,12 @@
 import React from 'react';
-import axios from 'axios';
+import axios from '../../axios';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
-import {ENDPOINT} from '../../config';
 import styled from '../hoc/styled';
 import {Paper, Fab, Typography, CircularProgress} from '@material-ui/core/';
 import Layout from '../layout/Layout';
 import FormItem from '../shared/FormItem';
+import withErrorHandler from "../hoc/withErrorHandler";
 
 
 const StyledPaper = styled(Paper)(theme => ({
@@ -21,11 +21,12 @@ class FormPage extends React.Component {
 
   componentDidMount() {
     const id = this.props.match.params.id;
-    axios.get(ENDPOINT + "forms/" + id)
+    axios.get("forms/" + id)
       .then(response => {
         this.setNewFilling(response.data.fields);
         this.setState({name: response.data.name, fields: response.data.fields});
-      });
+      })
+      .catch(error => {});
   }
 
   setNewFilling = (fields) => {
@@ -56,16 +57,18 @@ class FormPage extends React.Component {
     e.preventDefault();
     const id = this.props.match.params.id;
     const data = {fields: this.state.filling};
-    axios.post(ENDPOINT + "fills/" + id, data)
+    axios.post("fills/" + id, data)
       .then(response => {
-        console.log(response);
-        this.props.showModal({title: "Form has been sent"});
-        this.setNewFilling(this.state.fields);
-      });
+        if(response.data.id) {
+          this.props.showModal({title: "Form has been sent"});
+          this.setNewFilling(this.state.fields);
+        }
+      })
+      .catch(error => {});
   }
 
   render() {
-    let content = <CircularProgress />;
+    let content = this.props.error ? null : <CircularProgress />;
     if (this.state.fields) {
       content = <StyledPaper>
         <Typography variant="h6">{this.state.name}</Typography>
@@ -103,4 +106,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormPage, axios));
