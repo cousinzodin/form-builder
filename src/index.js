@@ -11,7 +11,7 @@ const store = createStore(rootReducer)
 
 const app = (
   <Provider store={store}>
-    <Router basename={'/form-builder'}>
+    <Router basename={process.env.PUBLIC_URL}>
       <App />
     </Router>
   </Provider>

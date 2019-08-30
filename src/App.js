@@ -17,7 +17,7 @@ function App() {
         <Route path={`${process.env.PUBLIC_URL}/form/stats/:id`} component={FormStatsPage} />
         <Route path={`${process.env.PUBLIC_URL}/form/:id`} component={FormPage} />
         <Route path={`${process.env.PUBLIC_URL}/constructor/:id`} component={FormConstructorPage} />
-        <Route path={`${process.env.PUBLIC_URL}/constructor/"`} component={FormConstructorPage} />
+        <Route path={`${process.env.PUBLIC_URL}/constructor/`} component={FormConstructorPage} />
         <Route component={Error404Page} />
       </Switch>
       <ModalWrapper />
