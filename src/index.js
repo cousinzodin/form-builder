@@ -11,7 +11,7 @@ const store = createStore(rootReducer)
 
 const app = (
   <Provider store={store}>
-    <Router>
+    <Router basename={'/form-builder'}>
       <App />
     </Router>
   </Provider>
