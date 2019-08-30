@@ -2,14 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
-import {ENDPOINT} from '../../config';
+import {ENDPOINT, ITEMS_PER_TAKE} from '../../config';
 import styled from '../hoc/styled';
-import {Typography, Paper, CircularProgress} from '@material-ui/core/';
+import {Typography, Paper, CircularProgress, Grid, Button} from '@material-ui/core/';
 import Layout from '../layout/Layout';
 import Table from '../shared/FlatTable';
 
 const StyledPaper = styled(Paper)(theme => ({
   marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2),
   paddingBottom: theme.spacing(2),
 }));
 
@@ -19,12 +20,24 @@ const Title = styled(Typography)(theme => ({
 
 class FormStatsPage extends React.Component {
 
-  componentDidMount() {
+  state = {take: 0, isAllLoaded: false};
+
+  loadData = () => {
     const id = this.props.match.params.id;
-    axios.get(ENDPOINT + "fills/" + id)
+    const take = this.state.take;
+    const max = ITEMS_PER_TAKE;
+    axios.get(`${ENDPOINT}fills/${id}?offset=${max * take}&count=${max}`)
       .then(response => {
         this.props.saveFills(response.data);
+        this.setState({take: this.state.take + 1, isAllLoaded: response.data.length < max});
       });
+
+  }
+
+  componentDidMount() {
+    const id = this.props.match.params.id;
+
+    this.loadData();
 
     if (!this.getName()) {
       axios.get(ENDPOINT + "forms/" + id)
@@ -62,6 +75,11 @@ class FormStatsPage extends React.Component {
           </Title>
           {content}
         </StyledPaper>
+        {this.state.isAllLoaded ? null : <Grid item xs={12}>
+          <Button onClick={this.loadData} variant="outlined" size="small" color="primary">
+            Load More
+        </Button>
+        </Grid>}
       </Layout>
     );
   }
