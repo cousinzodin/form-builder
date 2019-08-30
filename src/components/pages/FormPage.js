@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/actions';
 import {ENDPOINT} from '../../config';
 import styled from '../hoc/styled';
 import {Paper, Fab, Typography, CircularProgress} from '@material-ui/core/';
@@ -57,6 +59,7 @@ class FormPage extends React.Component {
     axios.post(ENDPOINT + "fills/" + id, data)
       .then(response => {
         console.log(response);
+        this.props.showModal({title: "Form has been sent"});
         this.setNewFilling(this.state.fields);
       });
   }
@@ -88,4 +91,16 @@ class FormPage extends React.Component {
   }
 }
 
-export default FormPage;
+const mapStateToProps = state => {
+  return {
+    forms: state.formsList
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    showModal: (modal) => dispatch({type: actionTypes.SHOW_MODAL, payload: modal}),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormPage);

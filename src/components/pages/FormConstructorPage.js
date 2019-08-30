@@ -32,6 +32,7 @@ class FormConstructorPage extends React.Component {
       axios.get(ENDPOINT + "fills/" + this.id)
         .then(response => {
           if (response.data.length > 0) {
+            this.props.showModal({title: "You can't edit this form", message: "This form has already been filled"});
             this.props.history.replace("/form/" + this.id);
             return;
           } else {
@@ -56,12 +57,14 @@ class FormConstructorPage extends React.Component {
       axios.put(ENDPOINT + "forms/" + id, this.state)
         .then(response => {
           console.log(response);
+          this.props.showModal({title: "Form has been saved"});
           this.props.history.push("/");
         });
     } else {
       axios.post(ENDPOINT + "forms/new", this.state)
         .then(response => {
           console.log(response);
+          this.props.showModal({title: "Form has been saved"});
           this.props.clearDraft();
           this.props.history.push("/");
         });
@@ -138,6 +141,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    showModal: (modal) => dispatch({type: actionTypes.SHOW_MODAL, payload: modal}),
     saveDraft: (form) => dispatch({type: actionTypes.SAVE_FORM_DRAFT, payload: form}),
     clearDraft: () => dispatch({type: actionTypes.CLEAR_FORM_DRAFT}),
   }

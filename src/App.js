@@ -6,6 +6,7 @@ import FormConstructorPage from './components/pages/FormConstructorPage';
 import FormListPage from './components/pages/FormListPage';
 import FormStatsPage from './components/pages/FormStatsPage';
 import Error404Page from './components/pages/Error404Page';
+import ModalWrapper from './components/shared/ModalWrapper';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/constructor/" component={FormConstructorPage} />
         <Route component={Error404Page} />
       </Switch>
+      <ModalWrapper />
     </React.Fragment>
   );
 }
