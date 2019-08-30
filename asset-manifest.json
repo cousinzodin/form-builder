@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/form-builder/static/js/main.3c48de7c.chunk.js",
+    "main.js.map": "/form-builder/static/js/main.3c48de7c.chunk.js.map",
+    "runtime~main.js": "/form-builder/static/js/runtime~main.51562bb3.js",
+    "runtime~main.js.map": "/form-builder/static/js/runtime~main.51562bb3.js.map",
+    "static/js/2.0413cb6f.chunk.js": "/form-builder/static/js/2.0413cb6f.chunk.js",
+    "static/js/2.0413cb6f.chunk.js.map": "/form-builder/static/js/2.0413cb6f.chunk.js.map",
+    "index.html": "/form-builder/index.html",
+    "precache-manifest.139e781b5a6892884e85d1fc1145db5e.js": "/form-builder/precache-manifest.139e781b5a6892884e85d1fc1145db5e.js",
+    "service-worker.js": "/form-builder/service-worker.js"
+  }
+}
