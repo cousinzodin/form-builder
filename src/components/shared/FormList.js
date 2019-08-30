@@ -1,6 +1,6 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {Button, Grid} from '@material-ui/core/';
+import {Grid} from '@material-ui/core/';
 import FormListItem from './FormListItem';
 
 const useStyles = makeStyles(theme => ({
@@ -22,13 +22,7 @@ export default function FormList(props) {
     <div className={classes.root}>
       <Grid container spacing={3}>
         {listItems}
-        {/* <Grid item xs={12}>
-          <Button variant="outlined" size="small" color="primary">
-            Load More
-        </Button>
-        </Grid> */}
       </Grid>
-
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/actions';
 import {ENDPOINT} from '../../config';
 import {Paper, Fab, Button, CircularProgress} from '@material-ui/core/';
 import styled from '../hoc/styled';
@@ -21,37 +23,49 @@ const StyledPaper = styled(Paper)(theme => ({
   position: 'relative'
 }));
 
-export default class FormConstructorPage extends React.Component {
-
-  state = {form: null};
+class FormConstructorPage extends React.Component {
+  id = this.props.match.params.id
+  state = this.props.match.params.id ? {name: "", fields: null} : this.props.draft;
 
   componentDidMount() {
-    const id = this.props.match.params.id;
-    if (id) {
-      axios.get(ENDPOINT + "forms/" + id)
+    if (this.id) {
+      axios.get(ENDPOINT + "fills/" + this.id)
         .then(response => {
-          this.setState({form: response.data});
+          if (response.data.length > 0) {
+            this.props.history.replace("/form/" + this.id);
+            return;
+          } else {
+            axios.get(ENDPOINT + "forms/" + this.id)
+              .then(response => {
+                this.setState({name: response.data.name, fields: response.data.fields});
+              });
+          }
         });
-    } else {
-      this.setState({form: {name: "My new form", fields: []}});
     }
+  }
+
+  componentWillUnmount() {
+    this.props.saveDraft(this.state);
   }
 
   save = (e) => {
     e.preventDefault();
     const id = this.props.match.params.id;
-    console.log("save", this.state.form, id);
-    // if (id) {
-    //   axios.put(ENDPOINT + "forms/" + id, this.state.form)
-    //     .then(response => {
-    //       console.log(response);
-    //     });
-    // } else {
-    //   axios.post(ENDPOINT + "forms/new", this.state.form)
-    //     .then(response => {
-    //       console.log(response);
-    //     });
-    // }
+    console.log("save", this.state, id);
+    if (id) {
+      axios.put(ENDPOINT + "forms/" + id, this.state)
+        .then(response => {
+          console.log(response);
+          this.props.history.push("/");
+        });
+    } else {
+      axios.post(ENDPOINT + "forms/new", this.state)
+        .then(response => {
+          console.log(response);
+          this.props.clearDraft();
+          this.props.history.push("/");
+        });
+    }
   }
 
   addField = () => {
@@ -61,39 +75,38 @@ export default class FormConstructorPage extends React.Component {
       label: "",
       placeholder: "",
     }
-    const updatedForm = {name: this.state.form.name, fields: [...this.state.form.fields, newField]};
-    this.setState({form: updatedForm});
+    this.setState({fields: [...this.state.fields, newField]});
   }
 
   deleteField = name => {
-    const updatedFields = this.state.form.fields.filter(item => item.name !== name);
-     console.log("delete", name, updatedFields);
-    this.setState({form: {name: this.state.form.name, fields: updatedFields}});
+    const updatedFields = this.state.fields.filter(item => item.name !== name);
+    console.log("delete", name, updatedFields);
+    this.setState({fields: updatedFields});
   }
 
   handleFieldChange = (field, index) => {
-    console.log(field);
-    const updatedFields = [...this.state.form.fields];
+    // console.log(field);
+    const updatedFields = [...this.state.fields];
     updatedFields[index] = field;
-    this.setState({form: {name: this.state.form.name, fields: updatedFields}});
+    this.setState({fields: updatedFields});
     // console.log(updatedFields);
   }
 
   handleNameChange = (e) => {
-    this.setState({form: {name: e.target.value, fields: this.state.form.fields}});
+    this.setState({name: e.target.value});
   }
 
   render() {
     let content = <CircularProgress />;
-    if (this.state.form) {
+    if (this.state && this.state.fields) {
       content =
         <React.Fragment>
           <StyledPaper>
-            <FormInput onChange={this.handleNameChange} label="Form title" id="new-form-title-field" placeholder="My new form" value={this.state.form.name} />
+            <FormInput onChange={this.handleNameChange} label="Form title" id="new-form-title-field" placeholder="My new form" value={this.state.name} />
           </StyledPaper>
-          {this.state.form.fields.map((field, index) => (
+          {this.state.fields.map((field, index) => (
             <StyledPaper key={field.name + index}>
-              <ButtonDelete onClick={() => this.deleteField(field.name)}/>
+              <ButtonDelete onClick={() => this.deleteField(field.name)} />
               <FormConstructorItem
                 onFieldChange={(field) => this.handleFieldChange(field, index)}
                 type={field.type}
@@ -108,10 +121,26 @@ export default class FormConstructorPage extends React.Component {
         </React.Fragment>;
     }
     return (
-      <Layout component="form" onSubmit={this.save} withLink action={<Fab variant="extended" color="secondary" type="submit" disabled={!this.state.form}> Save Form </Fab>}>
+      <Layout component="form" onSubmit={this.save} withLink action={<Fab variant="extended" color="secondary" type="submit" disabled={!this.state.fields}> Save Form </Fab>}>
         {content}
       </Layout>
     );
   }
 }
 
+
+
+const mapStateToProps = state => {
+  return {
+    draft: state.draft.draft
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    saveDraft: (form) => dispatch({type: actionTypes.SAVE_FORM_DRAFT, payload: form}),
+    clearDraft: () => dispatch({type: actionTypes.CLEAR_FORM_DRAFT}),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormConstructorPage);

@@ -1,6 +1,6 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import FormPage from './components/pages/FormPage';
 import FormConstructorPage from './components/pages/FormConstructorPage';
 import FormListPage from './components/pages/FormListPage';
@@ -11,18 +11,14 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Router>
-
-        <Switch>
-          <Route path="/" exact component={FormListPage} />
-          <Route path="/form/stats/:id" component={FormStatsPage} />
-          <Route path="/form/:id" component={FormPage} />
-          <Route path="/constructor/:id" component={FormConstructorPage} />
-          <Route path="/constructor/" component={FormConstructorPage} />
-          <Route component={Error404Page} />
-        </Switch>
-
-      </Router>
+      <Switch>
+        <Route path="/" exact component={FormListPage} />
+        <Route path="/form/stats/:id" component={FormStatsPage} />
+        <Route path="/form/:id" component={FormPage} />
+        <Route path="/constructor/:id" component={FormConstructorPage} />
+        <Route path="/constructor/" component={FormConstructorPage} />
+        <Route component={Error404Page} />
+      </Switch>
     </React.Fragment>
   );
 }

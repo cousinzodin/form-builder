@@ -7,9 +7,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const useStyles = makeStyles(theme => ({
   btn: {
     position: "absolute",
-    top: '5px',
-    right: '5px',
+    top: '2px',
+    right: '2px',
     zIndex: 10,
+    padding: '6px',
   },
 }));
 

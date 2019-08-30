@@ -14,20 +14,24 @@ const StyledPaper = styled(Paper)(theme => ({
 }));
 
 
-export default class FormPage extends React.Component {
-  state = {form: null, filling: null};
+class FormPage extends React.Component {
+  state = {name: "", fields: null, filling: null};
 
   componentDidMount() {
     const id = this.props.match.params.id;
     axios.get(ENDPOINT + "forms/" + id)
       .then(response => {
-        const filling = {};
-        response.data.fields.forEach(field => {
-          filling[field.name] = field.type === "dropdown" && field.items && field.items.length ? field.items[field.default].value : field.type === "checkmark" ? false : "";
-        });
-        this.setState({filling: filling});
-        this.setState({form: response.data});
+        this.setNewFilling(response.data.fields);
+        this.setState({name: response.data.name, fields: response.data.fields});
       });
+  }
+
+  setNewFilling = (fields) => {
+    const filling = {};
+    fields.forEach(field => {
+      filling[field.name] = field.type === "dropdown" && field.items && field.items.length ? field.items[field.default].value : field.type === "checkmark" ? false : "";
+    });
+    this.setState({filling: filling});
   }
 
   handleChange = (e) => {
@@ -53,15 +57,16 @@ export default class FormPage extends React.Component {
     axios.post(ENDPOINT + "fills/" + id, data)
       .then(response => {
         console.log(response);
+        this.setNewFilling(this.state.fields);
       });
   }
 
   render() {
     let content = <CircularProgress />;
-    if (this.state.form) {
+    if (this.state.fields) {
       content = <StyledPaper>
-        <Typography variant="h6">{this.state.form.name}</Typography>
-        {this.state.form.fields.map(field => (<FormItem
+        <Typography variant="h6">{this.state.name}</Typography>
+        {this.state.fields.map(field => (<FormItem
           value={this.state.filling[field.name]}
           onChange={this.handleChange}
           key={field.name}
@@ -76,11 +81,11 @@ export default class FormPage extends React.Component {
     }
     return (
       <Layout component="form" onSubmit={this.send}
-        action={<Fab variant="extended" color="secondary" type="submit" disabled={!this.state.form}>Send form</Fab>}>
+        action={<Fab variant="extended" color="secondary" type="submit" disabled={!this.state.fields}>Send form</Fab>}>
         {content}
       </Layout>
     );
   }
 }
 
-
+export default FormPage;
