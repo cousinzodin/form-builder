@@ -5,10 +5,8 @@ import * as actionTypes from '../../store/actions';
 import {Paper, Fab, Button, CircularProgress} from '@material-ui/core/';
 import styled from '../hoc/styled';
 import Layout from '../layout/Layout';
-//import FormItem from '../shared/FormItem';
-import FormConstructorItem from '../shared/FormConstructorItem';
+import FormConstructorList from '../shared/FormConstructorList';
 import FormInput from '../shared/FormInput';
-import ButtonDelete from "../shared/ButtonDelete";
 import withErrorHandler from "../hoc/withErrorHandler";
 
 const StyledPaper = styled(Paper)(theme => ({
@@ -18,8 +16,16 @@ const StyledPaper = styled(Paper)(theme => ({
   marginTop: theme.spacing(2),
   color: theme.palette.text.secondary,
   textAlign: 'left',
-  position: 'relative'
 }));
+
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
 
 class FormConstructorPage extends React.Component {
   id = this.props.match.params.id
@@ -79,7 +85,7 @@ class FormConstructorPage extends React.Component {
   addField = () => {
     const newField = {
       type: "text",
-      name: "",
+      name: "new-name-" + this.state.fields.length,
       label: "",
       placeholder: "",
     }
@@ -93,15 +99,33 @@ class FormConstructorPage extends React.Component {
   }
 
   handleFieldChange = (field, index) => {
-    // console.log(field);
+   // console.log(field, index);
     const updatedFields = [...this.state.fields];
     updatedFields[index] = field;
     this.setState({fields: updatedFields});
-    // console.log(updatedFields);
+     console.log(updatedFields);
   }
 
   handleNameChange = (e) => {
     this.setState({name: e.target.value});
+  }
+
+  reorderFields = result => {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const fields = reorder(
+      this.state.fields,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.setState({fields});
   }
 
   render() {
@@ -112,19 +136,7 @@ class FormConstructorPage extends React.Component {
           <StyledPaper>
             <FormInput onChange={this.handleNameChange} label="Form title" id="new-form-title-field" placeholder="My new form" value={this.state.name} />
           </StyledPaper>
-          {this.state.fields.map((field, index) => (
-            <StyledPaper key={field.name + index}>
-              <ButtonDelete onClick={() => this.deleteField(field.name)} />
-              <FormConstructorItem
-                onFieldChange={(field) => this.handleFieldChange(field, index)}
-                type={field.type}
-                name={field.name}
-                label={field.label}
-                placeholder={field.placeholder}
-                items={field.items}
-                default={field.default} />
-            </StyledPaper>
-          ))}
+          <FormConstructorList fields={this.state.fields} onDragEnd={this.reorderFields} onFieldChange={this.handleFieldChange} onDelete={this.deleteField}/>
           <Button onClick={this.addField} variant="contained" color="primary">+ Add new field</Button>
         </React.Fragment>;
     }
@@ -135,8 +147,6 @@ class FormConstructorPage extends React.Component {
     );
   }
 }
-
-
 
 const mapStateToProps = state => {
   return {
