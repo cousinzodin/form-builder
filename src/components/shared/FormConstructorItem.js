@@ -6,16 +6,16 @@ import ButtonDelete from "./ButtonDelete";
 import FormSelect from "./FormSelect";
 import {formatToSnakeCase} from "../../utils";
 import {Button, Paper, Typography} from '@material-ui/core';
-import {Draggable} from 'react-beautiful-dnd';
 
-const StyledPaperBig = styled(Paper)(theme => ({
+const StyledContainer = styled(Paper)(theme => ({
   padding: theme.spacing(2),
   paddingTop: 0,
   marginBottom: theme.spacing(2),
   marginTop: theme.spacing(2),
   color: theme.palette.text.secondary,
   textAlign: 'left',
-  position: 'relative'
+  position: 'relative',
+  backgroundColor: "inherit",
 }));
 
 const StyledPaper = styled(Paper)(theme => ({
@@ -27,7 +27,8 @@ const StyledPaper = styled(Paper)(theme => ({
   border: '1px solid',
   borderColor: theme.palette.text.secondary,
   textAlign: 'left',
-  position: 'relative'
+  position: 'relative',
+  backgroundColor: "inherit",
 }));
 
 const CenteredText = styled(Typography)(theme => ({
@@ -132,54 +133,39 @@ export default class FormConstructorItem extends React.Component {
   render() {
     const {type, name, label, placeholder, items, defaultOption} = this.state;
     return (
-
-      <Draggable draggableId={name} index={this.props.index}>
-        {provided => (
-          <div ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}>
-
-            <StyledPaperBig>
-              <ButtonDelete onClick={this.delete} />
-              <FormSelect onChange={this.onTypeChange} label="Field type" name={"type"} options={this.types} value={type} defaultOption={defaultOption} />
-              <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Label" name={"label"} placeholder="My field" type="text" value={label} />
-              <FormInput onBlur={this.onBlur} onChange={this.onChange} label="Name" name={"name"} placeholder="my-field" type="text" value={name} />
-              {type === 'text' || type === 'number' ? <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Placeholder" name={"placeholder"} placeholder="My helper text" type="text" value={placeholder} /> : null}
-              {type === 'dropdown' ?
-                <React.Fragment>
-                  <CenteredText>Add or edit options for your dropdown</CenteredText>
-                  {(items && items.length) ? items.map((option, index) => {
-                    const i = index + 1;
-                    return (<StyledPaper key={index} elevation={0}>
-                      <ButtonDelete onClick={() => this.deleteOption(option.value)} />
-                      <FormInput onChange={(e) => this.onOptionChange(e, index)} onBlur={this.onBlur} label={"Option " + i + " name"} name="name" id={"option-name-field-" + i} placeholder="Option name" type="text" value={option.name} />
-                      <FormInput onChange={(e) => this.onOptionChange(e, index)} onBlur={this.onBlur} label={"Option " + i + " value"} name="value" id={"option-value-field-" + i} placeholder="option-value" type="text" value={option.value} />
-                    </StyledPaper>)
-                  }) : null}
-                  <CenteredText>
-                    <Button onClick={this.addOption} size="small" variant="contained" color="primary">+ Add option</Button>
-                  </CenteredText>
-                  {(items && items.length > 1) ? <FormSelect onChange={this.onDefaultChange} label="Select default option" value={defaultOption.toString()} id={"default"} options={this.state.defaults} defaultOption={0} /> : null}
-                </React.Fragment>
-                : null
-              }
-            </StyledPaperBig >
-
-          </div>
-
-        )}
-      </Draggable>
-
-
-
-
+      <StyledContainer component="li">
+        <ButtonDelete onClick={this.delete} />
+        <FormSelect onChange={this.onTypeChange} label="Field type" name={"type"} options={this.types} value={type} defaultOption={defaultOption} />
+        <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Label" name={"label"} placeholder="My field" type="text" value={label} />
+        <FormInput onBlur={this.onBlur} onChange={this.onChange} label="Name" name={"name"} placeholder="my-field" type="text" value={name} />
+        {type === 'text' || type === 'number' ? <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Placeholder" name={"placeholder"} placeholder="My helper text" type="text" value={placeholder} /> : null}
+        {
+          type === 'dropdown' ?
+            <React.Fragment>
+              <CenteredText>Add or edit options for your dropdown</CenteredText>
+              {(items && items.length) ? items.map((option, index) => {
+                const i = index + 1;
+                return (<StyledPaper key={index} elevation={0}>
+                  <ButtonDelete onClick={() => this.deleteOption(option.value)} />
+                  <FormInput onChange={(e) => this.onOptionChange(e, index)} onBlur={this.onBlur} label={"Option " + i + " name"} name="name" id={"option-name-field-" + i} placeholder="Option name" type="text" value={option.name} />
+                  <FormInput onChange={(e) => this.onOptionChange(e, index)} onBlur={this.onBlur} label={"Option " + i + " value"} name="value" id={"option-value-field-" + i} placeholder="option-value" type="text" value={option.value} />
+                </StyledPaper>)
+              }) : null}
+              <CenteredText>
+                <Button onClick={this.addOption} size="small" variant="contained" color="primary">+ Add option</Button>
+              </CenteredText>
+              {(items && items.length > 1) ? <FormSelect onChange={this.onDefaultChange} label="Select default option" value={defaultOption.toString()} id={"default"} options={this.state.defaults} defaultOption={0} /> : null}
+            </React.Fragment>
+            : null
+        }
+      </StyledContainer >
 
     )
   }
 }
 
 FormConstructorItem.propTypes = {
-  inmex: PropTypes.number,
+  index: PropTypes.number,
   id: PropTypes.string,
   label: PropTypes.string,
   type: PropTypes.string,
@@ -190,5 +176,6 @@ FormConstructorItem.propTypes = {
     name: PropTypes.string,
     value: PropTypes.string
   })),
-  onFieldChange: PropTypes.func
+  onFieldChange: PropTypes.func,
+  onDelete: PropTypes.func,
 };

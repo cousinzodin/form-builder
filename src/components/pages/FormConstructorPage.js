@@ -8,6 +8,7 @@ import Layout from '../layout/Layout';
 import FormConstructorList from '../shared/FormConstructorList';
 import FormInput from '../shared/FormInput';
 import withErrorHandler from "../hoc/withErrorHandler";
+import {DragDropContext} from 'react-beautiful-dnd';
 
 const StyledPaper = styled(Paper)(theme => ({
   padding: theme.spacing(2),
@@ -65,6 +66,7 @@ class FormConstructorPage extends React.Component {
           console.log(response);
           if (response) {
             this.props.showModal({title: "Form has been saved"});
+            this.props.onFormSaved();
             this.props.history.push("/");
           }
         })
@@ -75,6 +77,7 @@ class FormConstructorPage extends React.Component {
           console.log(response);
           if (response.data.id) {
             this.props.showModal({title: "Form has been saved"});
+            this.props.onFormSaved();
             this.props.clearDraft();
             this.props.history.push("/")
           }
@@ -99,11 +102,11 @@ class FormConstructorPage extends React.Component {
   }
 
   handleFieldChange = (field, index) => {
-   // console.log(field, index);
+    // console.log(field, index);
     const updatedFields = [...this.state.fields];
     updatedFields[index] = field;
     this.setState({fields: updatedFields});
-     console.log(updatedFields);
+    console.log(updatedFields);
   }
 
   handleNameChange = (e) => {
@@ -136,7 +139,9 @@ class FormConstructorPage extends React.Component {
           <StyledPaper>
             <FormInput onChange={this.handleNameChange} label="Form title" id="new-form-title-field" placeholder="My new form" value={this.state.name} />
           </StyledPaper>
-          <FormConstructorList fields={this.state.fields} onDragEnd={this.reorderFields} onFieldChange={this.handleFieldChange} onDelete={this.deleteField}/>
+          <DragDropContext onDragEnd={this.reorderFields}>
+            <FormConstructorList fields={this.state.fields} onFieldChange={this.handleFieldChange} onDelete={this.deleteField} />
+          </DragDropContext>
           <Button onClick={this.addField} variant="contained" color="primary">+ Add new field</Button>
         </React.Fragment>;
     }
@@ -159,6 +164,7 @@ const mapDispatchToProps = dispatch => {
     showModal: (modal) => dispatch({type: actionTypes.SHOW_MODAL, payload: modal}),
     saveDraft: (form) => dispatch({type: actionTypes.SAVE_FORM_DRAFT, payload: form}),
     clearDraft: () => dispatch({type: actionTypes.CLEAR_FORM_DRAFT}),
+    onFormSaved: (data) => dispatch({type: actionTypes.CLEAR_FORM_LIST}),
   }
 }
 
