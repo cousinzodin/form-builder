@@ -133,7 +133,7 @@ export default class FormConstructorItem extends React.Component {
   render() {
     const {type, name, label, placeholder, items, defaultOption} = this.state;
     return (
-      <StyledContainer component="li">
+      <StyledContainer>
         <ButtonDelete onClick={this.delete} />
         <FormSelect onChange={this.onTypeChange} label="Field type" name={"type"} options={this.types} value={type} defaultOption={defaultOption} />
         <FormInput onChange={this.onChange} onBlur={this.onBlur} label="Label" name={"label"} placeholder="My field" type="text" value={label} />
