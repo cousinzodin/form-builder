@@ -1,11 +1,11 @@
 import React from 'react';
-import axios from '../../axios';
+import axios from '../../../axios';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../store/actions';
+import * as actionTypes from '../../../store/actions';
 import {Link as RouterLink} from "react-router-dom";
-import withErrorHandler from "../hoc/withErrorHandler";
-import FormList from '../shared/FormList';
-import Layout from '../layout/Layout';
+import withErrorHandler from "../../hoc/withErrorHandler";
+import FormList from './comp/FormList';
+import Layout from '../../layout/Layout';
 import {Fab, CircularProgress, Typography} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 

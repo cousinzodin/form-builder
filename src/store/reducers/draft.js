@@ -2,8 +2,9 @@ import * as actionTypes from '../actions';
 
 const initialState = {
   draft: {
-    name: "My new form",
-    fields: [],
+    formTitle: "My new form",
+    order: [],
+    fields: {}
   }
 }
 
@@ -13,8 +14,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SAVE_FORM_DRAFT:
       return {
         draft: {
-          name: action.payload.name,
-          fields: action.payload.fields
+          ...action.payload
         }
       };
 

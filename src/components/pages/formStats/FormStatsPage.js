@@ -1,13 +1,13 @@
 import React from 'react';
-import axios from '../../axios';
+import axios from '../../../axios';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../store/actions';
-import {ENDPOINT, ITEMS_PER_TAKE} from '../../config';
-import styled from '../hoc/styled';
+import * as actionTypes from '../../../store/actions';
+import {ENDPOINT, ITEMS_PER_TAKE} from '../../../config';
+import styled from '../../hoc/styled';
 import {Typography, Paper, CircularProgress, Grid, Button} from '@material-ui/core/';
-import Layout from '../layout/Layout';
-import Table from '../shared/FlatTable';
-import withErrorHandler from "../hoc/withErrorHandler";
+import Layout from '../../layout/Layout';
+import Table from '../../shared/FlatTable';
+import withErrorHandler from "../../hoc/withErrorHandler";
 
 
 const StyledPaper = styled(Paper)(theme => ({
