@@ -135,7 +135,7 @@ class FormConstructorPage extends React.Component {
         onReorder={this.reorderFields}
         order={this.state.order}
         values={{...this.state.fields, formTitle: this.state.formTitle}}
-        backError={this.props.error}
+        backError={this.props.error }
         validations={{formTitle: v.isFilled, defaultValidation: validateField}}
       />
     );
@@ -157,4 +157,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormConstructorPage, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(axios)(FormConstructorPage));

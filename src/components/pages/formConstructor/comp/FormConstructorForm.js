@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {fieldType, errorType} from '../../../../types';
 import {makeStyles} from '@material-ui/core/styles';
-import {Paper, Fab, Button, CircularProgress, Box} from '@material-ui/core/';
+import {Paper, Fab, Button, CircularProgress, Box, Typography} from '@material-ui/core/';
 import FormConstructorItem from './FormConstructorItem';
 import withDraggable from '../../../hoc/withDruggable';
 import withDroppable from '../../../hoc/withDroppable';
@@ -39,7 +41,7 @@ function FormConstructorForm({order, values, onFieldChange, onNameChange, onBlur
     }
   }
 
-  let content = backError ? null : <CircularProgress />;
+  let content = backError ? <Typography>{backError}</Typography>  : <CircularProgress />;
   if (order) {
     const items = order.map((id, index) => {
       const field = values[id];
@@ -77,5 +79,22 @@ function FormConstructorForm({order, values, onFieldChange, onNameChange, onBlur
     </Layout>
   );
 }
+
+FormConstructorForm.propTypes = {
+  onFieldChange: PropTypes.func.isRequired,
+  onNameChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  onAddField: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onReorder: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  validateForm: PropTypes.func.isRequired,
+  order: PropTypes.arrayOf(PropTypes.string),
+  backError: PropTypes.string,
+  values: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, fieldType])).isRequired,
+  formError: errorType,
+  errors: PropTypes.objectOf(errorType),
+};
 
 export default withValidation()(FormConstructorForm);

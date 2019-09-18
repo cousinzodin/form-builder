@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
 
-const withErrorHandler = (WrappedComponent, axios) => {
+const withErrorHandler = (axios) => (WrappedComponent) => {
   class Comp extends Component {
     constructor() {
       super();
@@ -23,11 +23,9 @@ const withErrorHandler = (WrappedComponent, axios) => {
       axios.interceptors.request.eject(this.reqInterceptor);
       axios.interceptors.response.eject(this.resInterceptor);
     }
-
-
     render() {
       return (
-        <WrappedComponent error={this.state.error} {...this.props} axios={axios} />
+        <WrappedComponent error={this.state.error ? this.state.error.message : null} {...this.props} axios={axios} />
       );
     }
   }

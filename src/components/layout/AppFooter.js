@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import {AppBar, Toolbar, Link} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -40,3 +40,7 @@ export default function AppFooter(props) {
     </AppBar>
   );
 }
+
+AppFooter.propTypes = {
+  children: PropTypes.element,
+};

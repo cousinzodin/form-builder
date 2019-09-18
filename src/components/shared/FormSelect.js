@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {optionType} from '../../types'
 import {FormControl, InputLabel, Select, MenuItem} from '@material-ui/core/';
 
-export default function FormSelect(props) {
-  const {id, label, options, defaultOption, value, onChange} = props;
+export default function FormSelect({id, label, options, defaultOption, value, onChange}) {
 
   return (
     <FormControl fullWidth margin="normal">
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
-      onChange={onChange}
+        onChange={onChange}
         value={value || options[defaultOption].value}
         inputProps={{
           name: id,
@@ -23,16 +23,10 @@ export default function FormSelect(props) {
 }
 
 FormSelect.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   label: PropTypes.string,
   value: PropTypes.string,
   defaultOption: PropTypes.number,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-  })),
+  options: PropTypes.arrayOf(optionType),
   onChange: PropTypes.func
 };

@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {modalType} from '../../types';
 import Modal from './CustomModal';
 import {connect} from 'react-redux';
 import * as actionTypes from '../../store/actions';
@@ -12,6 +14,11 @@ const ModalWrapper = (props) => {
     </div>
   );
 }
+
+ModalWrapper.propTypes = {
+  modals: PropTypes.arrayOf(modalType),
+  closeModal: PropTypes.func
+};
 
 export default connect(
   function mapStateToProps(state) {

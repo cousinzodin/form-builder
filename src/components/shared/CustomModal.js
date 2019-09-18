@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -30,10 +31,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CustomModal(props) {
-  const {title, message, open, handleClose} = props;
+export default function CustomModal({title, message, open, handleClose}) {
   const classes = useStyles();
-
   return (
     <Modal
       aria-labelledby="modal-title"
@@ -60,3 +59,9 @@ export default function CustomModal(props) {
   );
 }
 
+CustomModal.propTypes = {
+  open: PropTypes.bool,
+  title: PropTypes.string,
+  message: PropTypes.string,
+  handleClose: PropTypes.func.isRequired,
+};

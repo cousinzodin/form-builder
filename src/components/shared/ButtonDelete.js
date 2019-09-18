@@ -15,17 +15,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function FormInput(props) {
+export default function ButtonDelete(props) {
   const classes = useStyles();
-  const {onClick} = props;
-
   return (
-    <IconButton onClick={onClick} aria-label="delete" className={classes.btn}>
+    <IconButton onClick={props.onClick} aria-label="delete" className={classes.btn}>
       <DeleteIcon fontSize="small" />
     </IconButton>
   )
 }
 
-FormInput.propTypes = {
-  onClick: PropTypes.func,
+ButtonDelete.propTypes = {
+  onClick: PropTypes.func.isRequired,
 };

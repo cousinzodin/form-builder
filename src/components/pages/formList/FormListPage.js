@@ -22,7 +22,7 @@ class FormListPage extends React.Component {
   }
 
   render() {
-    let content = this.props.error ? null : <CircularProgress />;
+    let content = this.props.error ? <Typography>{this.props.error}</Typography> : <CircularProgress />;
     if (this.props.forms) {
       content = this.props.forms.length ? <FormList forms={this.props.forms} /> : <Typography >You have no forms yet</Typography >
     }
@@ -48,4 +48,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormListPage, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(axios)(FormListPage));

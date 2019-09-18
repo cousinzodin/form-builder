@@ -10,9 +10,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function FlatTable(props) {
+export default function FlatTable({rows}) {
   const classes = useStyles();
-  const {rows} = props;
   const columns = Object.keys(rows[0]);
 
   return (
@@ -35,5 +34,5 @@ export default function FlatTable(props) {
 }
 
 FlatTable.propTypes = {
-  type: PropTypes.arrayOf(PropTypes.object),
+  rows: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]))),
 };

@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {fieldType, errorType} from '../../../../types';
 import Layout from '../../../layout/Layout';
 import withValidation from "../../../hoc/withValidation";
 import {Paper, Fab, Typography, CircularProgress} from '@material-ui/core/';
@@ -24,7 +26,7 @@ function Form({fields, values, onChange, onBlur, onSubmit, onFocus, title, backE
     }
   }
 
-  let content = backError ? null : <CircularProgress />;
+  let content = backError ? <Typography>{backError}</Typography> : <CircularProgress />;
 
   if (fields) {
     content = <Paper className={classes.paper}>
@@ -51,6 +53,19 @@ function Form({fields, values, onChange, onBlur, onSubmit, onFocus, title, backE
       {content}
     </Layout>
   );
+}
+
+Form.propTypes = {
+ fields: PropTypes.arrayOf(fieldType),
+ errors: PropTypes.objectOf(errorType),
+ values: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])),
+ title: PropTypes.string,
+ backError: PropTypes.string,
+ onFocus: PropTypes.func.isRequired,
+ onBlur: PropTypes.func.isRequired,
+ validateForm: PropTypes.func.isRequired,
+ onSubmit: PropTypes.func.isRequired,
+ onChange: PropTypes.func.isRequired,
 }
 
 export default withValidation()(Form);

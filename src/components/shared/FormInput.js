@@ -24,13 +24,17 @@ export default function FormInput({type, id, name, label, placeholder, value, on
 
 FormInput.propTypes = {
   type: PropTypes.string,
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   label: PropTypes.string,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   error: PropTypes.string,
-  valid: PropTypes.bool,
   value: PropTypes.string,
   onChange: PropTypes.func,
-  onBlur: PropTypes.func
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func
+};
+
+FormInput.defaultProps = {
+  type: 'text'
 };

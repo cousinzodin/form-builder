@@ -1,12 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 export default function styled(WrappedComponent) {
   return (style, options) => {
     function StyledComponent(props) {
-      const { classes, className, ...other } = props;
+      const {classes, className, ...other} = props;
       return <WrappedComponent className={classNames(classes.root, className)} {...other} />;
     }
     StyledComponent.propTypes = {
@@ -14,7 +14,7 @@ export default function styled(WrappedComponent) {
       className: PropTypes.string,
     };
     const styles =
-      typeof style === 'function' ? theme => ({ root: style(theme) }) : { root: style };
+      typeof style === 'function' ? theme => ({root: style(theme)}) : {root: style};
     return withStyles(styles, options)(StyledComponent);
   };
 }

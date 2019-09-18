@@ -32,7 +32,7 @@ export default function Layout(props) {
   );
 };
 
-AppHeader.propTypes = {
+Layout.propTypes = {
   withLink: PropTypes.bool,
   action: PropTypes.element,
   component: PropTypes.string,

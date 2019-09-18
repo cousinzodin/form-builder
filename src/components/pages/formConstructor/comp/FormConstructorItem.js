@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {fieldType, errorType} from '../../../../types';
 import styled from '../../../hoc/styled';
 import FormInput from "../../../shared/FormInput";
 import ButtonDelete from "../../../shared/ButtonDelete";
@@ -126,17 +127,55 @@ class FormConstructorItem extends React.Component {
     return (
       <StyledContainer>
         <ButtonDelete onClick={this.delete} />
-        <FormSelect onChange={this.onTypeChange} label="Field type" name={"type"} id={id + "-type"} options={typeOptions} value={type} defaultOption={defaultOption} />
-        <FormInput onChange={this.onChange} onBlur={this.onBlur} onFocus={this.props.onFocus} label="Label" name={"label"} id={id + "-label"} placeholder="My field" type="text" value={label} error={error.label} />
-        <FormInput onBlur={this.onBlur} onChange={this.onChange} onFocus={this.props.onFocus} label="Name" name={"name"} id={id + "-name"} placeholder="my-field" type="text" value={name} error={error.name} />
-        {type === 'text' || type === 'number' ? <FormInput onChange={this.onChange} onFocus={this.props.onFocus} onBlur={this.onBlur} label="Placeholder" name={"placeholder"} id={id + "-placeholder"} error={error.placeholder} placeholder="My helper text" type="text" value={placeholder} /> : null}
+        <FormSelect
+          onChange={this.onTypeChange}
+          label="Field type"
+
+          name={"type"}
+          id={id + "-type"}
+          options={typeOptions}
+          value={type}
+          defaultOption={defaultOption} />
+        <FormInput
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          onFocus={this.props.onFocus}
+          label="Label"
+          name={"label"}
+          id={id + "-label"}
+          placeholder="My field"
+          type="text"
+          value={label}
+          error={error.label} />
+        <FormInput
+          onBlur={this.onBlur}
+          onChange={this.onChange}
+          onFocus={this.props.onFocus}
+          label="Name" name={"name"}
+          id={id + "-name"}
+          placeholder="my-field"
+          type="text"
+          value={name}
+          error={error.name} />
+        {type === 'text' || type === 'number' ?
+          <FormInput
+            onChange={this.onChange}
+            onFocus={this.props.onFocus}
+            onBlur={this.onBlur}
+            label="Placeholder"
+            name={"placeholder"}
+            id={id + "-placeholder"}
+            error={error.placeholder}
+            placeholder="My helper text"
+            type="text"
+            value={placeholder} />
+          : null}
         {
           type === 'dropdown' ?
             <React.Fragment>
               <FormConstructorDropdown
                 formError={error.select}
                 values={items}
-                items={items}
                 id={id}
                 onAdd={this.addOption}
                 onDelete={this.deleteOption}
@@ -164,19 +203,14 @@ class FormConstructorItem extends React.Component {
 }
 
 FormConstructorItem.propTypes = {
-  index: PropTypes.number,
-  id: PropTypes.string,
-  label: PropTypes.string,
-  type: PropTypes.string,
-  name: PropTypes.string,
-  placeholder: PropTypes.string,
-  defaultOption: PropTypes.string,
-  items: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    value: PropTypes.string
-  })),
-  onFieldChange: PropTypes.func,
-  onDelete: PropTypes.func,
+  id: PropTypes.string.isRequired,
+  values: fieldType.isRequired,
+  onFieldChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  errors: PropTypes.objectOf(errorType),
+  formError: PropTypes.objectOf(errorType),
 };
 
 export default withValidation()(FormConstructorItem);

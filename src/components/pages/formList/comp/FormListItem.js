@@ -48,6 +48,6 @@ export default function FormListItem(props) {
 }
 
 FormListItem.propTypes = {
-  name: PropTypes.string,
-  id: PropTypes.number,
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 };

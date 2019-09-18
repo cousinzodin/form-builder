@@ -59,7 +59,7 @@ class FormStatsPage extends React.Component {
 
   render() {
     const name = this.getName();
-    let content = this.props.error ? null : <CircularProgress />;
+    let content = this.props.error ? <Typography>{this.props.error}</Typography> : <CircularProgress />;
     if (this.props.fills) {
       if (this.props.fills.length) {
         const data = this.props.fills.map((item) => {
@@ -104,4 +104,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormStatsPage, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(axios)(FormStatsPage));

@@ -82,7 +82,8 @@ class FormPage extends React.Component {
         values={this.state.data}
         title={this.state.name}
         validations={this.state.validationRules}
-        backError={this.props.error} />
+        backError={this.props.error}
+      />
     );
   }
 }
@@ -99,4 +100,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(FormPage, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(axios)(FormPage));

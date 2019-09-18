@@ -66,6 +66,11 @@ const withValidation = () => WrappedComponent => {
     }
   }
 
+  Comp.propTypes = {
+    values: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
+    validations: PropTypes.objectOf(PropTypes.func).isRequired,
+  };
+
   return Comp;
 };
 
