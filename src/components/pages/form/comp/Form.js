@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {fieldType, errorType} from '../../../../types';
+import {fieldType, errorsType} from '../../../../types';
 import Layout from '../../../layout/Layout';
 import withValidation from "../../../hoc/withValidation";
 import {Paper, Fab, Typography, CircularProgress} from '@material-ui/core/';
@@ -57,7 +57,7 @@ function Form({fields, values, onChange, onBlur, onSubmit, onFocus, title, backE
 
 Form.propTypes = {
  fields: PropTypes.arrayOf(fieldType),
- errors: PropTypes.objectOf(errorType),
+ errors: errorsType,
  values: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])),
  title: PropTypes.string,
  backError: PropTypes.string,

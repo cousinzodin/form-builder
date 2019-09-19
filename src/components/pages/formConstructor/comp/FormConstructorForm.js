@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {fieldType, errorType} from '../../../../types';
+import {fieldType, errorsType} from '../../../../types';
 import {makeStyles} from '@material-ui/core/styles';
 import {Paper, Fab, Button, CircularProgress, Box, Typography} from '@material-ui/core/';
 import FormConstructorItem from './FormConstructorItem';
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function FormConstructorForm({order, values, onFieldChange, onNameChange, onBlur, onSubmit, onAddField, onDelete, onReorder, backError, errors, validateForm, onFocus}) {
+function FormConstructorForm({order, values, onFieldChange, onNameChange, onBlur, onSubmit, onAddField, onDelete, onReorder, backError, errors, validateForm, onFocus, clearError}) {
   const classes = useStyles();
 
   const handleSubmit = (e) => {
@@ -56,6 +56,7 @@ function FormConstructorForm({order, values, onFieldChange, onNameChange, onBlur
           values={field}
           validations={v.fieldValidator}
           formError={errors[id]}
+          clearFormError={clearError}
         />);
     });
     content =
@@ -93,8 +94,7 @@ FormConstructorForm.propTypes = {
   order: PropTypes.arrayOf(PropTypes.string),
   backError: PropTypes.string,
   values: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, fieldType])).isRequired,
-  formError: errorType,
-  errors: PropTypes.objectOf(errorType),
+  errors: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, errorsType])),
 };
 
 export default withValidation()(FormConstructorForm);

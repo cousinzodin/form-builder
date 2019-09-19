@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {fieldType, errorType} from '../../../../types';
+import {fieldType, errorsType} from '../../../../types';
 import styled from '../../../hoc/styled';
 import FormInput from "../../../shared/FormInput";
 import ButtonDelete from "../../../shared/ButtonDelete";
@@ -40,11 +40,11 @@ class FormConstructorItem extends React.Component {
   }
 
   componentDidMount() {
-    this.updateDefaults();
+    this.updateDefaults(this.state.items);
   }
 
-  updateDefaults = () => {
-    const updated = this.state.items.map((o, i) => ({
+  updateDefaults = (options) => {
+    const updated = options.map((o, i) => ({
       name: o.name,
       value: i,
     }));
@@ -61,10 +61,10 @@ class FormConstructorItem extends React.Component {
   onOptionChange = (option, index) => {
     const items = [...this.state.items];
     items[index] = option;
-    this.updateDefaults();
     const updatedState = {...this.state, items};
     this.setState({items});
     this.save(updatedState);
+    this.updateDefaults(items);
   }
 
   onDefaultChange = (e) => {
@@ -94,6 +94,7 @@ class FormConstructorItem extends React.Component {
     const updatedState = {...this.state, items};
     this.setState({items});
     this.save(updatedState);
+    this.updateDefaults(items);
   }
 
   save = (state) => {
@@ -113,6 +114,13 @@ class FormConstructorItem extends React.Component {
   onBlur = (e) => {
     this.props.onBlur(e);
     this.save(this.state);
+  }
+
+  onFocus = (e) => {
+    this.props.onFocus(e);
+    if (this.props.formError) {
+      this.props.clearFormError(this.props.id);
+    }
   }
 
   delete = () => {
@@ -139,7 +147,7 @@ class FormConstructorItem extends React.Component {
         <FormInput
           onChange={this.onChange}
           onBlur={this.onBlur}
-          onFocus={this.props.onFocus}
+          onFocus={this.onFocus}
           label="Label"
           name={"label"}
           id={id + "-label"}
@@ -150,7 +158,7 @@ class FormConstructorItem extends React.Component {
         <FormInput
           onBlur={this.onBlur}
           onChange={this.onChange}
-          onFocus={this.props.onFocus}
+          onFocus={this.onFocus}
           label="Name" name={"name"}
           id={id + "-name"}
           placeholder="my-field"
@@ -160,7 +168,7 @@ class FormConstructorItem extends React.Component {
         {type === 'text' || type === 'number' ?
           <FormInput
             onChange={this.onChange}
-            onFocus={this.props.onFocus}
+            onFocus={this.onFocus}
             onBlur={this.onBlur}
             label="Placeholder"
             name={"placeholder"}
@@ -209,8 +217,8 @@ FormConstructorItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
-  errors: PropTypes.objectOf(errorType),
-  formError: PropTypes.objectOf(errorType),
+  errors: errorsType,
+  formError: errorsType,
 };
 
 export default withValidation()(FormConstructorItem);

@@ -14,8 +14,12 @@ const withValidation = () => WrappedComponent => {
     }
 
     onFocus = (e) => {
+      this.clearError(e.target.name);
+    }
+
+    clearError = (name) => {
       const {errors} = this.state;
-      errors[e.target.name] = null;
+      errors[name] = null;
       this.setState({errors});
     }
 
@@ -61,6 +65,7 @@ const withValidation = () => WrappedComponent => {
           onFocus={this.onFocus}
           validateForm={this.validateForm}
           validateField={this.validateField}
+          clearError={this.clearError}
         />
       );
     }

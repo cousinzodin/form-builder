@@ -8,14 +8,14 @@ export const longerThan = (length) => (data, errorMsg = "Please add options") =>
 
 export const isNumber = (data, errorMsg) => Number.isInteger(data) ? null : errorMsg;
 export const isFilled = (data, errorMsg = 'Please fill this field') => data ? null : errorMsg;
-export const isUnique = (values) => (data, errorMsg = "Value must be unique") => !data || values.filter(item => item === data).length > 1
+export const isUnique = (values) => (data, errorMsg = "Value must be unique") => isFilled(data) ? isFilled(data) : values.filter(item => item === data).length > 1
   ? errorMsg
   : null;
 
 const optionsValidator = (data, errorMsg = "All options must be named") => {
   const hasOptions = longerThan(0)(data);
-  return hasOptions ? hasOptions:
-  data.find(option => !option.name || !option.value) ? errorMsg : null;
+  return hasOptions ? hasOptions :
+    data.find(option => !option.name || !option.value) ? errorMsg : null;
 }
 
 export const fieldValidator = {

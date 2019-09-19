@@ -35,4 +35,4 @@ export const modalType = PropTypes.shape({
   id: PropTypes.number,
 });
 
-export const errorType = PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(null)]);
+export const errorsType = PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]));

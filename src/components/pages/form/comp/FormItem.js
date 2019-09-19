@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {optionType, errorType} from '../../../../types';
+import {optionType} from '../../../../types';
 import FormInput from "../../../shared/FormInput";
 import FormCheckbox from "../../../shared/FormCheckbox";
 import FormSelect from "../../../shared/FormSelect";
@@ -29,7 +29,7 @@ FormItem.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  error: errorType,
+  error: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
