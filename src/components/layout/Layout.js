@@ -29,7 +29,7 @@ export default function Layout(props) {
         </AppFooter>
       </Box>
     </Box>
-  );
+  );  
 };
 
 Layout.propTypes = {

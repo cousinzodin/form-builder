@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {modalType} from '../../types';
 import Modal from './CustomModal';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../store/actions/actionTypes';
 import * as actions from '../../store/actions';
 
 const ModalWrapper = (props) => {

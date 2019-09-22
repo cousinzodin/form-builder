@@ -28,7 +28,6 @@ export const fieldValidator = {
 }
 
 export const validateField = (names) => (v) => {
-  console.log(names);
   let error = null;
   const name = isUnique(names)(v.name);
   const label = fieldValidator.label(v.label);

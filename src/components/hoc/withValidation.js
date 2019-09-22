@@ -10,7 +10,6 @@ const withValidation = () => WrappedComponent => {
     onBlur = (e) => {
       const {name, value} = e.target;
       this.validateField(name, value);
-      console.log(name, value);
     }
 
     onFocus = (e) => {
@@ -26,20 +25,11 @@ const withValidation = () => WrappedComponent => {
     validateForm = () => {
       const errors = {};
       let valid = true;
-      // if (defaultValidation) {
       for (let key in this.props.values) {
         const value = this.props.values[key];
         errors[key] = this.validate(key, value);
         valid = !errors[key] && valid;
       }
-      // } else {
-      //   for (let key in this.props.validations) {
-      //     const value = this.props.values[key];
-      //     errors[key] = this.validate(key, value);
-      //     valid = !errors[key] && valid;
-      //   }
-      // }
-
       this.setState({errors});
       return valid;
     }

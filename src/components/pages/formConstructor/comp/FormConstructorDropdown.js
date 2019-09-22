@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import FormInput from '../../../shared/FormInput';
 import withValidation from '../../../hoc/withValidation';
 import PropTypes from 'prop-types';
-import {optionType, errorsType} from '../../../../types';
+import {optionType} from '../../../../types';
 import ButtonDelete from "../../../shared/ButtonDelete";
 import {formatToKebabCase} from "../../../../utils";
 import {Button, Paper, Typography, FormHelperText, Box} from '@material-ui/core';
