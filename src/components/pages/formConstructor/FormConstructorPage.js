@@ -13,7 +13,7 @@ class FormConstructorPage extends React.Component {
 
   componentDidMount() {
     if (this.state.id) {
-      this.props.getForm(this.state.id);
+      this.props.getForm(this.state.id, this.props.history);
     }
   }
 
@@ -40,10 +40,10 @@ class FormConstructorPage extends React.Component {
   save = () => {
     const fields = this.state.order.map(item => this.state.fields[item]);
     const form = {name: this.state.formTitle, fields};
-    if (this.id) {
-      this.props.editForm(form, this.id);
+    if (this.props.match.params.id) {
+      this.props.editForm(this.props.match.params.id, form, this.props.history);
     } else {
-      this.props.createForm(form);
+      this.props.createForm(form, this.props.history);
     }
   }
 
@@ -97,10 +97,13 @@ class FormConstructorPage extends React.Component {
     this.setState({order});
   }
 
+
+
   render() {
     const validateField = v.validateField(this.state.names);
 
     return (
+
       <FormConstructorForm
         onSubmit={this.save}
         onFieldChange={this.handleFieldChange}
@@ -120,6 +123,7 @@ class FormConstructorPage extends React.Component {
 const mapStateToProps = state => {
   return {
     drafts: state.draft,
+    redirect: state.draft.redirect,
   }
 }
 
@@ -129,7 +133,9 @@ const mapDispatchToProps = dispatch => {
     saveDraft: (id, form) => dispatch(actions.saveFormDraft(id, form)),
     clearDraft: (id) => dispatch(actions.clearFormDraft(id)),
     getFills: (id) => dispatch(actions.fetchFillList(id, 0, 1)),
-    getForm: (id) => dispatch(actions.fetchFormForEditing(id)),
+    getForm: (id, history) => dispatch(actions.fetchFormForEditing(id, history)),
+    editForm: (id, form, history) => dispatch(actions.editForm(id, form, history)),
+    createForm: (form, history) => dispatch(actions.createForm(form, history)),
   }
 }
 

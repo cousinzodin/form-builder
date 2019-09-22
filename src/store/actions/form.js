@@ -23,21 +23,21 @@ export const fetchForm = (id) => {
   };
 };
 
-export const editForm = (id, form) => {
+export const editForm = (id, form, history) => {
   return dispatch => {
     axios.put("forms/" + id, form)
       .then(response => {
         if (response) {
           dispatch(showModal({title: "Form has been saved"}));
           dispatch(clearFormList());
-          //this.props.history.push("/");
+          history.push("/");
         }
       })
       .catch(error => {});
   };
 };
 
-export const createForm = (form) => {
+export const createForm = (form, history) => {
   return dispatch => {
     axios.post("forms/new", form)
       .then(response => {
@@ -45,7 +45,7 @@ export const createForm = (form) => {
           dispatch(showModal({title: "Form has been saved"}));
           dispatch(clearFormList());
           dispatch(clearFormDraft("new"));
-          //this.props.history.push("/")
+          history.push("/")
         }
       }).catch(error => {});
   };
@@ -63,16 +63,15 @@ export const fillForm = (id, data) => {
   }
 }
 
-export const fetchFormForEditing = (id) => {
+export const fetchFormForEditing = (id, history) => {
   return dispatch => {
     axios.get("fills/" + id)
       .then(response => {
         if (response.data.length > 0) {
+          history.replace("/form/" + id);
           dispatch(showModal({title: "You can't edit this form", message: "This form has already been filled"}));
-          // this.props.history.replace("/form/" + this.id);
           return;
         } else {
-          // dispatch(fetchForm(id));
           axios.get("forms/" + id)
             .then(response => {
               dispatch(createFormDraft(response.data));
