@@ -2,74 +2,48 @@ import React from 'react';
 import axios from '../../../axios';
 import {connect} from 'react-redux';
 import {reorder, generateUUID} from '../../../utils';
-import * as actionTypes from '../../../store/actions';
+import * as actions from '../../../store/actions';
 import FormConstructorForm from './comp/FormConstructorForm';
 import withErrorHandler from "../../hoc/withErrorHandler";
 import * as v from "../../../validation";
 
 class FormConstructorPage extends React.Component {
-  id = this.props.match.params.id
-  state = this.props.match.params.id ? {formTitle: "", fields: {}, order: null} : {...this.props.draft};
+
+  state = this.props.match.params.id ? {id: this.props.match.params.id, ...this.props.drafts[this.props.match.params.id]} : {...this.props.drafts.new};
 
   componentDidMount() {
-    if (this.id) {
-      axios.get("fills/" + this.id)
-        .then(response => {
-          if (response.data.length > 0) {
-            this.props.showModal({title: "You can't edit this form", message: "This form has already been filled"});
-            this.props.history.replace("/form/" + this.id);
-            return;
-          } else {
-            axios.get("forms/" + this.id)
-              .then(response => {
-                const fields = {};
-                const order = [];
-                const names = [];
-                response.data.fields.forEach((field, index) => {
-                  const id = generateUUID();
-                  fields[id] = field;
-                  order[index] = id;
-                  names[index] = field.name;
-                });
-                this.setState({formTitle: response.data.name, fields, order, names});
-              })
-              .catch(error => {});
-          }
-        })
-        .catch(error => {});
+    if (this.state.id) {
+      this.props.getForm(this.state.id);
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const id = prevState.id;
+    if (id && !prevState.fields && nextProps.drafts[id]) {
+      return {id: id, ...nextProps.drafts[id]};
+    } else {
+      return null;
     }
   }
 
   componentWillUnmount() {
     if (this.state.order) {
-      this.props.saveDraft(this.state);
+      if (this.state.id) {
+        this.props.saveDraft(this.state.id, this.state);
+
+      } else {
+        this.props.saveDraft("new", this.state);
+      }
     }
   }
 
   save = () => {
-    const id = this.props.match.params.id;
     const fields = this.state.order.map(item => this.state.fields[item]);
     const form = {name: this.state.formTitle, fields};
-    if (id) {
-      axios.put("forms/" + id, form)
-        .then(response => {
-          if (response) {
-            this.props.showModal({title: "Form has been saved"});
-            this.props.onFormSaved();
-            this.props.history.push("/");
-          }
-        })
-        .catch(error => {});
+    if (this.id) {
+      this.props.editForm(form, this.id);
     } else {
-      axios.post("forms/new", form)
-        .then(response => {
-          if (response.data.id) {
-            this.props.showModal({title: "Form has been saved"});
-            this.props.onFormSaved();
-            this.props.clearDraft();
-            this.props.history.push("/")
-          }
-        }).catch(error => {});
+      this.props.createForm(form);
     }
   }
 
@@ -125,6 +99,7 @@ class FormConstructorPage extends React.Component {
 
   render() {
     const validateField = v.validateField(this.state.names);
+
     return (
       <FormConstructorForm
         onSubmit={this.save}
@@ -135,7 +110,7 @@ class FormConstructorPage extends React.Component {
         onReorder={this.reorderFields}
         order={this.state.order}
         values={{...this.state.fields, formTitle: this.state.formTitle}}
-        backError={this.props.error }
+        backError={this.props.error}
         validations={{formTitle: v.isFilled, defaultValidation: validateField}}
       />
     );
@@ -144,16 +119,17 @@ class FormConstructorPage extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    draft: state.draft.draft
+    drafts: state.draft,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    showModal: (modal) => dispatch({type: actionTypes.SHOW_MODAL, payload: modal}),
-    saveDraft: (form) => dispatch({type: actionTypes.SAVE_FORM_DRAFT, payload: form}),
-    clearDraft: () => dispatch({type: actionTypes.CLEAR_FORM_DRAFT}),
-    onFormSaved: () => dispatch({type: actionTypes.CLEAR_FORM_LIST}),
+    showModal: (modal) => dispatch(actions.showModal(modal)),
+    saveDraft: (id, form) => dispatch(actions.saveFormDraft(id, form)),
+    clearDraft: (id) => dispatch(actions.clearFormDraft(id)),
+    getFills: (id) => dispatch(actions.fetchFillList(id, 0, 1)),
+    getForm: (id) => dispatch(actions.fetchFormForEditing(id)),
   }
 }
 

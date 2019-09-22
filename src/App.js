@@ -13,11 +13,11 @@ function App() {
     <React.Fragment>
       <CssBaseline />
       <Switch>
-        <Route path={`${process.env.PUBLIC_URL}/`} exact component={FormListPage} />
-        <Route path={`${process.env.PUBLIC_URL}/form/stats/:id`} component={FormStatsPage} />
-        <Route path={`${process.env.PUBLIC_URL}/form/:id`} component={FormPage} />
-        <Route path={`${process.env.PUBLIC_URL}/constructor/:id`} component={FormConstructorPage} />
-        <Route path={`${process.env.PUBLIC_URL}/constructor/`} component={FormConstructorPage} />
+        <Route path={`/`} exact component={FormListPage} />
+        <Route path={`/form/stats/:id`} component={FormStatsPage} />
+        <Route path={`/form/:id`} component={FormPage} />
+        <Route path={`/constructor/:id`} component={FormConstructorPage} />
+        <Route path={`/constructor/`} component={FormConstructorPage} />
         <Route component={Error404Page} />
       </Switch>
       <ModalWrapper />

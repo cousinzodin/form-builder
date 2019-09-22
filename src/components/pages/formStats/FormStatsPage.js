@@ -1,14 +1,15 @@
 import React from 'react';
 import axios from '../../../axios';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../../store/actions';
-import {ENDPOINT, ITEMS_PER_TAKE} from '../../../config';
+import * as actions from '../../../store/actions';
+import {selectName} from '../../../store/reducers/fills';
+import {ITEMS_PER_TAKE} from '../../../config';
 import styled from '../../hoc/styled';
 import {Typography, Paper, CircularProgress, Grid, Button} from '@material-ui/core/';
 import Layout from '../../layout/Layout';
 import Table from '../../shared/FlatTable';
 import withErrorHandler from "../../hoc/withErrorHandler";
-
+import withLoadMore from "../../hoc/withLoadMore";
 
 const StyledPaper = styled(Paper)(theme => ({
   marginTop: theme.spacing(2),
@@ -22,19 +23,11 @@ const Title = styled(Typography)(theme => ({
 
 class FormStatsPage extends React.Component {
 
-  state = {take: 0, isAllLoaded: false};
-
   loadData = () => {
     const id = this.props.match.params.id;
-    const take = this.state.take;
     const max = ITEMS_PER_TAKE;
-    axios.get(`fills/${id}?offset=${max * take}&count=${max}`)
-      .then(response => {
-        this.props.saveFills(response.data);
-        this.setState({take: this.state.take + 1, isAllLoaded: response.data.length < max});
-      })
-      .catch(error => {});
-
+    this.props.onLoadMore();
+    this.props.getFills(id, this.props.take, max);
   }
 
   componentDidMount() {
@@ -42,12 +35,8 @@ class FormStatsPage extends React.Component {
 
     this.loadData();
 
-    if (!this.getName()) {
-      axios.get(ENDPOINT + "forms/" + id)
-        .then(response => {
-          this.props.saveForm(response.data);
-        })
-        .catch(error => {});
+    if (!this.props.name) {
+      this.props.getForm(id);
     }
   }
 
@@ -55,10 +44,8 @@ class FormStatsPage extends React.Component {
     this.props.onDestroy();
   }
 
-  getName = () => (this.props.forms && this.props.forms[this.props.match.params.id]) ? this.props.forms[this.props.match.params.id].name : "";
 
   render() {
-    const name = this.getName();
     let content = this.props.error ? <Typography>{this.props.error}</Typography> : <CircularProgress />;
     if (this.props.fills) {
       if (this.props.fills.length) {
@@ -75,11 +62,11 @@ class FormStatsPage extends React.Component {
       <Layout withLink>
         <StyledPaper>
           <Title variant="h6" align="left">
-            {name}
+            {this.props.name}
           </Title>
           {content}
         </StyledPaper>
-        {this.props.fills && !this.state.isAllLoaded ? <Grid item xs={12}>
+        {this.props.fills && !this.props.isAllLoaded ? <Grid item xs={12}>
           <Button onClick={this.loadData} variant="outlined" size="small" color="primary">
             Load More
         </Button>
@@ -92,16 +79,17 @@ class FormStatsPage extends React.Component {
 const mapStateToProps = state => {
   return {
     fills: state.fills.fillsList,
-    forms: state.forms.formsDict
+    name: selectName(state),
+    isAllLoaded: state.fills.isAllLoaded,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    saveFills: (data) => dispatch({type: actionTypes.ADD_FILL_LIST, list: data}),
-    saveForm: (data) => dispatch({type: actionTypes.ADD_FORM, payload: data}),
-    onDestroy: () => dispatch({type: actionTypes.CLEAR_FILL_LIST}),
+    getFills: (id, take, max) => dispatch(actions.fetchFillList(id, take, max)),
+    getForm: (id) => dispatch(actions.fetchForm(id)),
+    onDestroy: () => dispatch(actions.clearFillList()),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(axios)(FormStatsPage));
+export default connect(mapStateToProps, mapDispatchToProps)(withLoadMore(withErrorHandler(axios)(FormStatsPage)));

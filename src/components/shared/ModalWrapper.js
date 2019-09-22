@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {modalType} from '../../types';
 import Modal from './CustomModal';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../store/actions';
+import * as actionTypes from '../../store/actions/actionTypes';
+import * as actions from '../../store/actions';
 
 const ModalWrapper = (props) => {
   const modals = props.modals.map(item =>
@@ -28,7 +29,7 @@ export default connect(
   },
   function mapDispatchToProps(dispatch) {
     return {
-      closeModal: (id) => dispatch({type: actionTypes.CLOSE_MODAL, payload: id})
+      closeModal: (id) => dispatch(actions.closeModal(id))
     }
   }
 )(ModalWrapper);

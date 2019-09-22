@@ -4,10 +4,16 @@ import {BrowserRouter as Router} from "react-router-dom";
 import {Provider} from 'react-redux';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {createStore} from 'redux';
+import {configStore} from './store';
 import rootReducer from './store/reducers';
+import thunk from 'redux-thunk';
 
-const store = createStore(rootReducer)
+
+const store = configStore(rootReducer, thunk);
+// const store = createStore(
+//   rootReducer,
+//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+// );
 
 const app = (
   <Provider store={store}>

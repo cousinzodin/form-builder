@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../store/actions';
+import * as actions from '../../store/actions';
 
 const withErrorHandler = (axios) => (WrappedComponent) => {
   class Comp extends Component {
@@ -38,7 +38,7 @@ const withErrorHandler = (axios) => (WrappedComponent) => {
     },
     function mapDispatchToProps(dispatch) {
       return {
-        showModal: (modal) => dispatch({type: actionTypes.SHOW_MODAL, payload: modal}),
+        showModal: (modal) => dispatch(actions.showModal(modal)),
         //closeModal: (id) => dispatch({type: actionTypes.CLOSE_MODAL, payload: id})
       }
     }

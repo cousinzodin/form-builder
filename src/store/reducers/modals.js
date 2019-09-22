@@ -1,4 +1,4 @@
-import * as actionTypes from '../actions';
+import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   modals: []
@@ -12,7 +12,7 @@ const reducer = (state = initialState, action) => {
         };
       case actionTypes.CLOSE_MODAL:
         return {
-          modals: state.modals.filter(item => item.id !== action.payload),
+          modals: state.modals.filter(item => item.id !== action.id),
         };
 
     default:

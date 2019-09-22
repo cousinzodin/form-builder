@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from '../../../axios';
 import {connect} from 'react-redux';
-import * as actionTypes from '../../../store/actions';
+import * as actions from '../../../store/actions';
 import {Link as RouterLink} from "react-router-dom";
 import withErrorHandler from "../../hoc/withErrorHandler";
 import FormList from './comp/FormList';
@@ -13,11 +13,7 @@ class FormListPage extends React.Component {
 
   componentDidMount() {
     if (!this.props.forms) {
-      axios.get("forms/list")
-        .then(response => {
-          this.props.onFormsLoaded(response.data);
-        })
-        .catch(error => {});
+      this.props.fetchFormList();
     }
   }
 
@@ -44,7 +40,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFormsLoaded: (data) => dispatch({type: actionTypes.ADD_FORM_LIST, list: data}),
+    onFormsLoaded: (data) => dispatch(actions.addFormList(data)),
+    fetchFormList: () => dispatch(actions.fetchFormList()),
   }
 }
 
