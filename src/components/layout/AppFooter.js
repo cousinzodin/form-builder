@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {AppBar, Toolbar, Link} from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles';
 
@@ -29,18 +28,13 @@ export default function AppFooter(props) {
   const classes = useStyles();
 
   return (
-    <AppBar component="footer" position="fixed" color="default" className={classes.appBar}>
+    <AppBar component="footer" color="default" className={classes.appBar}>
       <Toolbar className={classes.toolBar}>
         <div className={classes.fabButton}>
           {props.children}
         </div>
         <Link href="https://github.com/cousinzodin/form-builder" color="textSecondary">View on GitHub</Link>
       </Toolbar>
-
     </AppBar>
   );
-}
-
-AppFooter.propTypes = {
-  children: PropTypes.element,
 };

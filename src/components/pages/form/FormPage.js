@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import * as actions from '../../../store/actions';
 import withErrorHandler from "../../hoc/withErrorHandler";
 import Form from "./comp/Form";
+import Layout from '../../layout/Layout';
+import {Typography, CircularProgress} from '@material-ui/core/';
 import {selectValidations, selectDefaultData} from "../../../store/reducers/form";
 
 class FormPage extends React.Component {
@@ -14,9 +16,21 @@ class FormPage extends React.Component {
     this.props.getForm(id);
   }
 
+  componentWillUnmount() {
+    this.props.clearForm();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!prevState.data && nextProps.fields) {
+      return {data: nextProps.defaultData};
+    } else {
+      return null;
+    }
+  }
 
   handleChange = (e) => {
     const data = this.state.data ? {...this.state.data} : {};
+
     switch (e.target.type) {
       case 'number':
         data[e.target.name] = parseInt(e.target.value);
@@ -39,16 +53,22 @@ class FormPage extends React.Component {
   }
 
   render() {
-    return (
-      <Form
+    let content = this.props.error ? <Typography>{this.props.error}</Typography> : <CircularProgress />;
+    if (this.props.fields) {
+      content = <Form
         onSubmit={this.send}
         onChange={this.handleChange}
         fields={this.props.fields}
         values={this.state.data || this.props.defaultData}
         title={this.props.name}
         validations={this.props.validationRules}
-        backError={this.props.error}
       />
+    }
+
+    return (
+      <Layout containerWidth="sm">
+        {content}
+      </Layout>
     );
   }
 }
@@ -67,6 +87,7 @@ const mapDispatchToProps = dispatch => {
   return {
     showModal: (modal) => dispatch(actions.showModal(modal)),
     getForm: (id) => dispatch(actions.fetchForm(id)),
+    clearForm: (id) => dispatch(actions.clearForm()),
     fillForm: (id, form) => dispatch(actions.fillForm(id, form)),
   }
 }

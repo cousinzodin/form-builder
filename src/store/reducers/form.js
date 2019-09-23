@@ -19,6 +19,9 @@ const reducer = (state = initialState, action) => {
         fields: action.payload.fields,
       }
 
+    case actionTypes.CLEAR_FORM:
+      return initialState
+
     default:
       return state;
   }
@@ -47,9 +50,19 @@ export const selectDefaultData = createSelector([selectFields], fields => {
   const data = {};
   if (fields) {
     fields.forEach(field => {
-      data[field.name] = field.type === "dropdown" && field.items && field.items.length ? field.items[field.default].value : field.type === "checkmark" ? false : "";
+      switch (field.type) {
+        case 'dropdown':
+          data[field.name] = field.items[field.default].value;
+          break;
+        case 'checkmark':
+          data[field.name] = false;
+          break;
+        default:
+          data[field.name] = "";
+      }
     });
   }
+  console.log(data);
   return data;
 });
 

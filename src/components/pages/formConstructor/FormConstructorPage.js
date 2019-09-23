@@ -6,6 +6,8 @@ import * as actions from '../../../store/actions';
 import FormConstructorForm from './comp/FormConstructorForm';
 import withErrorHandler from "../../hoc/withErrorHandler";
 import * as v from "../../../validation";
+import Layout from '../../layout/Layout';
+import {CircularProgress, Typography} from '@material-ui/core/';
 
 class FormConstructorPage extends React.Component {
 
@@ -102,20 +104,29 @@ class FormConstructorPage extends React.Component {
   render() {
     const validateField = v.validateField(this.state.names);
 
+    let content = this.props.error ? <Typography>{this.props.error}</Typography> : <CircularProgress />;
+
+    if (this.state.order) {
+      content =
+        <FormConstructorForm
+          onSubmit={this.save}
+          onFieldChange={this.handleFieldChange}
+          onNameChange={this.handleNameChange}
+          onDelete={this.deleteField}
+          onAddField={this.addField}
+          onReorder={this.reorderFields}
+          order={this.state.order}
+          values={{...this.state.fields, formTitle: this.state.formTitle}}
+          validations={{formTitle: v.isFilled, defaultValidation: validateField}}
+        />
+    }
+
     return (
 
-      <FormConstructorForm
-        onSubmit={this.save}
-        onFieldChange={this.handleFieldChange}
-        onNameChange={this.handleNameChange}
-        onDelete={this.deleteField}
-        onAddField={this.addField}
-        onReorder={this.reorderFields}
-        order={this.state.order}
-        values={{...this.state.fields, formTitle: this.state.formTitle}}
-        backError={this.props.error}
-        validations={{formTitle: v.isFilled, defaultValidation: validateField}}
-      />
+      <Layout containerWidth="sm" withLink>
+        {content}
+      </Layout>
+
     );
   }
 }

@@ -23,7 +23,7 @@ class FormListPage extends React.Component {
       content = this.props.forms.length ? <FormList forms={this.props.forms} /> : <Typography >You have no forms yet</Typography >
     }
     return (
-      <Layout withLink action={<Fab to="/constructor" component={RouterLink} color="secondary" aria-label="add">
+      <Layout withLink withFooter action={<Fab to="/constructor" component={RouterLink} color="secondary" aria-label="add">
         <AddIcon /></Fab>}>
         {content}
       </Layout>

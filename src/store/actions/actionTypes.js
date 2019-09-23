@@ -10,8 +10,8 @@ export const SHOW_MODAL = "OPEN_MODAL";
 export const CLOSE_MODAL = "CLOSE_MODAL";
 
 export const ADD_FORM = "ADD_FORM";
+export const CLEAR_FORM = "CLEAR_FORM";
 
 export const SAVE_FORM_DRAFT = "SAVE_FORM_DRAFT";
 export const CREATE_FORM_DRAFT = "CREATE_FORM_DRAFT";
 export const CLEAR_FORM_DRAFT = "CLEAR_FORM_DRAFT";
-//export const FETCH_FORMS_ERROR = "FETCH_FORMS_ERROR";

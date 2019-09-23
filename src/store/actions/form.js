@@ -11,6 +11,11 @@ export const addForm = (payload) => {
   };
 };
 
+export const clearForm = () => {
+  return {
+    type: actionTypes.CLEAR_FORM,
+  };
+};
 
 export const fetchForm = (id) => {
   return dispatch => {

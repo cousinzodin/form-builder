@@ -17,7 +17,7 @@ export default function FormItem({type, name, label, placeholder, options, defau
       return (options && options.length) ? <FormSelect onChange={onChange} label={label} id={name} options={options} value={value} defaultOption={defaultOption} /> : null;
     case 'checkmark':
       return (
-        <FormCheckbox onChange={onChange} label={label} name={name} id={name} value={name} checked={value} />
+        <FormCheckbox onChange={onChange} label={label} name={name} id={name} value={name} checked={value ? true : false} />
       );
     default:
       return null;

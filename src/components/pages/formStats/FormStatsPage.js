@@ -5,9 +5,9 @@ import * as actions from '../../../store/actions';
 import {selectName} from '../../../store/reducers/fills';
 import {ITEMS_PER_TAKE} from '../../../config';
 import styled from '../../hoc/styled';
-import {Typography, Paper, CircularProgress, Grid, Button} from '@material-ui/core/';
+import {Typography, Paper, CircularProgress, Button} from '@material-ui/core/';
 import Layout from '../../layout/Layout';
-import Table from '../../shared/FlatTable';
+import FormStatsTable from './comp/FormStatsTable';
 import withErrorHandler from "../../hoc/withErrorHandler";
 import withLoadMore from "../../hoc/withLoadMore";
 
@@ -23,20 +23,10 @@ const Title = styled(Typography)(theme => ({
 
 class FormStatsPage extends React.Component {
 
-  loadData = () => {
-    const id = this.props.match.params.id;
-    const max = ITEMS_PER_TAKE;
-    this.props.onLoadMore();
-    this.props.getFills(id, this.props.take, max);
-  }
-
   componentDidMount() {
-    const id = this.props.match.params.id;
-
     this.loadData();
-
     if (!this.props.name) {
-      this.props.getForm(id);
+      this.props.getForm(this.props.match.params.id);
     }
   }
 
@@ -44,33 +34,29 @@ class FormStatsPage extends React.Component {
     this.props.onDestroy();
   }
 
+  loadData = () => {
+    this.props.getFills(this.props.match.params.id, this.props.take, ITEMS_PER_TAKE);
+    this.props.onLoadMore();
+  }
 
   render() {
     let content = this.props.error ? <Typography>{this.props.error}</Typography> : <CircularProgress />;
+    let loadMoreButton = null;
     if (this.props.fills) {
-      if (this.props.fills.length) {
-        const data = this.props.fills.map((item) => {
-          const id = item.id;
-          return {id, ...item.fields}
-        });
-        content = <Table rows={data} />;
-      } else {
-        content = <Typography>This form had not been filled yet</Typography >
-      }
+      content = <FormStatsTable fills={this.props.fills} />
+      loadMoreButton = !this.props.isAllLoaded ?
+        <Button onClick={this.loadData} variant="outlined" size="small" color="primary"> Load More </Button>
+        : null
     }
     return (
-      <Layout withLink>
+      <Layout withLink withFooter>
         <StyledPaper>
           <Title variant="h6" align="left">
             {this.props.name}
           </Title>
           {content}
         </StyledPaper>
-        {this.props.fills && !this.props.isAllLoaded ? <Grid item xs={12}>
-          <Button onClick={this.loadData} variant="outlined" size="small" color="primary">
-            Load More
-        </Button>
-        </Grid> : null}
+        {loadMoreButton}
       </Layout>
     );
   }

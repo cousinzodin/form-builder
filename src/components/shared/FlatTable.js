@@ -25,7 +25,7 @@ export default function FlatTable({rows}) {
         {rows.map(row => (
           <TableRow key={row.id}>
             {columns.map(column => (<TableCell key={row.id + column}>
-              {row[column] ? row[column].toString() : ""}
+              {row[column].toString()}
             </TableCell>))}
           </TableRow>
         ))}

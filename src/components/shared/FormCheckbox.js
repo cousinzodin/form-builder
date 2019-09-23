@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl, Checkbox, FormControlLabel} from '@material-ui/core/';
 
-export default function FormCheckbox({name, label, onChange, id}) {
+export default function FormCheckbox({name, label, onChange, id, checked}) {
 
   return (
     <FormControl fullWidth margin="normal">
@@ -14,6 +14,7 @@ export default function FormCheckbox({name, label, onChange, id}) {
             name={name}
             id={id}
             color="primary"
+            checked={checked}
           />
         }
         label={label}
